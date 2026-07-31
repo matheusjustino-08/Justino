@@ -11,6 +11,24 @@ const MAGIC_TAG: &[u8; 8] = b"JUSTINO!";
 fn main() {
     // 1. Check if this binary itself has an embedded .jucode payload footer
     if let Ok(Some(embedded_source)) = check_and_extract_embedded_payload() {
+        if embedded_source.contains("Justino Studio") || embedded_source.contains("WindowConfig") || embedded_source.contains("window.create") {
+            let mut ide_html = env::current_dir().unwrap_or_default().join("justino_ide/ui/index.html");
+            if !ide_html.exists() {
+                ide_html = env::current_exe().unwrap_or_default().parent().unwrap_or(std::path::Path::new(".")).join("justino_ide/ui/index.html");
+            }
+            let file_url = format!("file:///{}", ide_html.to_string_lossy().replace('\\', "/"));
+
+            let _ = std::process::Command::new("cmd.exe")
+                .arg("/c")
+                .arg("start")
+                .arg("msedge")
+                .arg(format!("--app={}", file_url))
+                .arg("--window-size=1280,800")
+                .status();
+
+            process::exit(0);
+        }
+
         println!("============================================================");
         println!("  Justino Language (.jucode) - Native Executable (.exe)");
         println!("============================================================\n");
