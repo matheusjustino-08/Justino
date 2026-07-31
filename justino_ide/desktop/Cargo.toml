@@ -1,0 +1,15 @@
+[package]
+name = "justino-studio"
+version = "1.0.0"
+edition = "2021"
+authors = ["Matheus Justino <matheusjustino-08>"]
+description = "Justino Studio Native IDE Executable"
+
+[dependencies]
+wry = "0.22"
+tao = "0.15"
+
+# A flag below hides the Windows CMD terminal from spawning behind the UI!
+# It makes it a pure GUI app.
+[target.'cfg(windows)'.rustflags]
+rustflags = ["-C", "link-arg=/SUBSYSTEM:WINDOWS", "-C", "link-arg=/ENTRY:mainCRTStartup"]
