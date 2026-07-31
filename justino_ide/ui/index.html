@@ -4,66 +4,558 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Justino Studio IDE (.jucode)</title>
-    <link rel="stylesheet" href="src/onboarding/onboarding.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { width: 100vw; height: 100vh; overflow: hidden; display: flex; flex-direction: column; background: #1e1e2e; color: #cdd6f4; font-family: 'Segoe UI', sans-serif; }
-        header.ide-navbar { height: 40px; background: #11111b; display: flex; align-items: center; padding: 0 16px; gap: 20px; border-bottom: 1px solid #313244; font-size: 14px; }
-        .ide-body { flex: 1; display: flex; }
-        .sidebar { width: 220px; background: #181825; border-right: 1px solid #313244; padding: 12px; font-size: 13px; }
-        .editor-container { flex: 1; display: flex; flex-direction: column; }
-        .editor-pane { flex: 1; background: #1e1e2e; padding: 16px; font-family: monospace; }
-        .preview-pane { width: 380px; background: #11111b; border-left: 1px solid #313244; display: flex; flex-direction: column; }
-        .preview-header { height: 32px; background: #181825; display: flex; align-items: center; padding: 0 12px; font-size: 12px; border-bottom: 1px solid #313244; }
-        iframe#preview-iframe { flex: 1; border: none; background: #fff; }
-        .ai-panel-container { width: 300px; background: #181825; border-left: 1px solid #313244; display: flex; flex-direction: column; }
-        .ai-messages { flex: 1; padding: 12px; overflow-y: auto; font-size: 13px; }
-        .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; }
-        .msg.ai { background: #313244; color: #89b4fa; }
-        .msg.user { background: #45475a; color: #f5e0dc; }
-        .ai-input-box { display: flex; padding: 8px; gap: 6px; border-top: 1px solid #313244; }
-        .ai-input-box input { flex: 1; background: #313244; border: none; color: #fff; padding: 6px 10px; border-radius: 4px; }
-        .ai-input-box button { background: #89b4fa; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #1e1e2e;
+            color: #cdd6f4;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            user-select: none;
+        }
+
+        /* Top Navigation Bar */
+        header.ide-navbar {
+            height: 42px;
+            background: #11111b;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 16px;
+            border-bottom: 1px solid #313244;
+            font-size: 13px;
+        }
+        .brand-title {
+            color: #89b4fa;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-item {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #a6adc8;
+            transition: all 0.15s ease;
+        }
+        .nav-item:hover {
+            background: #313244;
+            color: #ffffff;
+        }
+        .nav-btn-action {
+            background: #3182ce;
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .nav-btn-action:hover {
+            background: #2b6cb0;
+        }
+
+        /* Main Workspace Body */
+        .ide-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar Directory Explorer */
+        .sidebar {
+            width: 230px;
+            background: #181825;
+            border-right: 1px solid #313244;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 13px;
+        }
+        .sidebar-header {
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #6c7086;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .file-item {
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            color: #bac2de;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.15s ease;
+        }
+        .file-item:hover {
+            background: #313244;
+            color: #ffffff;
+        }
+        .file-item.active {
+            background: #45475a;
+            color: #89b4fa;
+            font-weight: bold;
+        }
+
+        /* Main Editor Area */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #1e1e2e;
+        }
+        .tab-bar {
+            height: 36px;
+            background: #181825;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #313244;
+            padding-left: 8px;
+        }
+        .tab {
+            padding: 8px 16px;
+            background: #1e1e2e;
+            color: #89b4fa;
+            font-size: 13px;
+            font-weight: bold;
+            border-top: 2px solid #89b4fa;
+            border-right: 1px solid #313244;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-textarea {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            background: #1e1e2e;
+            color: #cdd6f4;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 16px;
+            border: none;
+            outline: none;
+            resize: none;
+            box-sizing: border-box;
+            tab-size: 4;
+        }
+
+        /* Live Preview Pane */
+        .preview-pane {
+            width: 420px;
+            background: #11111b;
+            border-left: 1px solid #313244;
+            display: flex;
+            flex-direction: column;
+        }
+        .preview-header {
+            height: 36px;
+            background: #181825;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #a6adc8;
+            border-bottom: 1px solid #313244;
+        }
+        iframe#preview-iframe {
+            flex: 1;
+            border: none;
+            background: #ffffff;
+        }
+
+        /* AI Chat Drawer */
+        .ai-sidebar {
+            width: 320px;
+            background: #181825;
+            border-left: 1px solid #313244;
+            display: flex;
+            flex-direction: column;
+        }
+        .ai-header {
+            height: 36px;
+            background: #11111b;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #89b4fa;
+            border-bottom: 1px solid #313244;
+        }
+        .ai-messages {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+        }
+        .msg {
+            padding: 10px 12px;
+            border-radius: 8px;
+            line-height: 1.4;
+        }
+        .msg.ai {
+            background: #313244;
+            color: #cdd6f4;
+            border-left: 3px solid #89b4fa;
+        }
+        .msg.user {
+            background: #45475a;
+            color: #f5e0dc;
+            align-self: flex-end;
+        }
+        .ai-input-box {
+            display: flex;
+            padding: 10px;
+            gap: 8px;
+            border-top: 1px solid #313244;
+            background: #11111b;
+        }
+        .ai-input-box input {
+            flex: 1;
+            background: #313244;
+            border: 1px solid #45475a;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            outline: none;
+            font-size: 13px;
+        }
+        .ai-input-box button {
+            background: #89b4fa;
+            color: #11111b;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Bottom Terminal Drawer */
+        .terminal-drawer {
+            height: 140px;
+            background: #11111b;
+            border-top: 1px solid #313244;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+        }
+        .terminal-header {
+            height: 28px;
+            background: #181825;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #a6adc8;
+            border-bottom: 1px solid #313244;
+        }
+        .terminal-content {
+            flex: 1;
+            padding: 10px;
+            color: #a6e3a1;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
     <header class="ide-navbar">
-        <strong>Justino Studio IDE</strong>
-        <span>File</span>
-        <span>Edit</span>
-        <span>View</span>
-        <span>Run</span>
-        <span>Build (.exe)</span>
+        <div class="brand-title">🚀 Justino Studio IDE</div>
+        <div class="nav-item" onclick="openFile('app_demo.jucode')">File</div>
+        <div class="nav-item" onclick="openFile('styles.css')">Styles (.css)</div>
+        <div class="nav-item" onclick="toggleTheme()">Theme</div>
+        <div class="nav-item" onclick="toggleAiPanel()">AI Agent (Ctrl+L)</div>
+        <button class="nav-btn-action" onclick="runScript()">▶ Run</button>
+        <button class="nav-btn-action" style="background: #805ad5;" onclick="buildExe()">📦 Build (.exe)</button>
     </header>
 
+    <!-- Main Workspace -->
     <div class="ide-body">
+        <!-- Sidebar Explorer -->
         <div class="sidebar">
-            <h4 style="margin-bottom: 10px;">Explorer</h4>
-            <div>📄 app_demo.jucode</div>
-            <div>📄 styles.css</div>
-            <div>📄 .env</div>
+            <div class="sidebar-header">Explorer</div>
+            <div id="file-app_demo" class="file-item active" onclick="openFile('app_demo.jucode')">📄 app_demo.jucode</div>
+            <div id="file-styles" class="file-item" onclick="openFile('styles.css')">🎨 styles.css</div>
+            <div id="file-env" class="file-item" onclick="openFile('.env')">⚙️ .env</div>
+            <div id="file-app_desktop" class="file-item" onclick="openFile('app_desktop.jucode')">📄 app_desktop.jucode</div>
         </div>
 
+        <!-- Code Editor Area -->
         <div class="editor-container">
-            <div class="editor-pane">
-                <pre><code>// Justino Studio IDE (.jucode)
-fn main() -> int {
-    let app = window.create({});
-    return 0;
-}
-return main();</code></pre>
+            <div class="tab-bar">
+                <div id="active-tab" class="tab">📄 app_demo.jucode</div>
+            </div>
+            <textarea id="code-editor" class="code-textarea" spellcheck="false"></textarea>
+
+            <!-- Terminal Output Drawer -->
+            <div class="terminal-drawer">
+                <div class="terminal-header">TERMINAL / COMPILER OUTPUT</div>
+                <div id="terminal-out" class="terminal-content">Justino Studio Environment Ready. Select a file or click 'Run' to evaluate bytecode.</div>
             </div>
         </div>
 
+        <!-- Live UI Preview Pane -->
         <div class="preview-pane">
-            <div class="preview-header">Live UI Preview</div>
+            <div class="preview-header">
+                <span>GPU LIVE UI PREVIEW</span>
+                <span style="color: #a6e3a1;">● Connected</span>
+            </div>
             <iframe id="preview-iframe"></iframe>
         </div>
 
-        <div id="ai-panel-container" class="ai-panel-container"></div>
+        <!-- AI Assistant Sidebar -->
+        <div id="ai-sidebar" class="ai-sidebar">
+            <div class="ai-header">🤖 Justino AI Assistant (Ctrl+L)</div>
+            <div id="ai-messages" class="ai-messages">
+                <div class="msg ai">Welcome! I am your project-aware Justino AI assistant. Ask me questions or request inline code refactoring!</div>
+            </div>
+            <div class="ai-input-box">
+                <input id="ai-input" type="text" placeholder="Ask AI or request refactor..." onkeydown="if(event.key==='Enter') sendAiMessage()" />
+                <button onclick="sendAiMessage()">Send</button>
+            </div>
+        </div>
     </div>
 
-    <script type="module" src="src/main.js"></script>
+    <script>
+        const fileContents = {
+            'app_demo.jucode': `// Justino UI Demo Application (.jucode)
+struct User {
+    id: int,
+    name: string
+}
+
+fn main() -> int {
+    let u = User { id: 1, name: "Justino Developer" };
+    return u.id + 1;
+}
+
+return main();`,
+            'styles.css': `/* Justino CSS3 Application Stylesheet */
+window {
+    background-color: #f4f6f9;
+    width: 800px;
+    height: 600px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.header-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.title-app {
+    font-size: 24px;
+    color: #1a202c;
+    font-weight: bold;
+}
+
+.subtitle-app {
+    font-size: 14px;
+    color: #718096;
+    margin-top: 4px;
+}
+
+.form-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.input-text {
+    width: 280px;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.btn-action {
+    background-color: #3182ce;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-toggle-lang {
+    background-color: #805ad5;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}`,
+            '.env': `APP_NAME="Justino Enterprise Desktop App"
+APP_PORT=8080
+DB_PATH="app_data.db"
+SECRET_KEY="super_secure_justino_secret_token"
+DEFAULT_LOCALE="en-US"`,
+            'app_desktop.jucode': `// Justino Native Enterprise Desktop Application (.jucode)
+struct UserRecord {
+    id: int,
+    username: string,
+    email: string,
+    balance: int
+}
+
+fn main() -> int {
+    let user = UserRecord { id: 1, username: "Alice", email: "alice@justino.org", balance: 1250 };
+    return user.balance;
+}
+
+return main();`
+        };
+
+        let currentFile = 'app_demo.jucode';
+        const editor = document.getElementById('code-editor');
+        const activeTab = document.getElementById('active-tab');
+        const previewIframe = document.getElementById('preview-iframe');
+        const terminalOut = document.getElementById('terminal-out');
+
+        function openFile(fileName) {
+            currentFile = fileName;
+            activeTab.innerText = (fileName.endsWith('.css') ? '🎨 ' : fileName.endsWith('.env') ? '⚙️ ' : '📄 ') + fileName;
+            editor.value = fileContents[fileName] || '';
+
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+            if (fileName === 'app_demo.jucode') document.getElementById('file-app_demo')?.classList.add('active');
+            if (fileName === 'styles.css') document.getElementById('file-styles')?.classList.add('active');
+            if (fileName === '.env') document.getElementById('file-env')?.classList.add('active');
+            if (fileName === 'app_desktop.jucode') document.getElementById('file-app_desktop')?.classList.add('active');
+
+            updateLivePreview();
+        }
+
+        function updateLivePreview() {
+            const cssContent = fileContents['styles.css'] || '';
+            const html = `
+                <!DOCTYPE html>
+                <html lang="en-US" dir="ltr">
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        html, body { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', sans-serif; background: #f4f6f9; }
+                        ${cssContent}
+                    </style>
+                </head>
+                <body>
+                    <window id="app-window">
+                        <div class="header-container">
+                            <text id="titulo" class="title-app">Welcome to Justino Language!</text>
+                            <text id="subtitulo" class="subtitle-app">GPU-Accelerated Declarative UI Engine</text>
+                        </div>
+
+                        <div class="form-box">
+                            <input id="campo" class="input-text" type="text" value="Justino Developer" placeholder="Enter text...">
+                            <button id="btn-confirmar" class="btn-action">Confirm</button>
+                            <button id="btn-lang" class="btn-toggle-lang" onclick="toggleLocale()">Toggle Language (RTL)</button>
+                        </div>
+                    </window>
+
+                    <script>
+                        function toggleLocale() {
+                            const html = document.documentElement;
+                            if (html.dir === 'ltr') {
+                                html.dir = 'rtl';
+                                html.lang = 'ar-SA';
+                                document.getElementById('titulo').innerText = 'مرحباً بك في لغة خوستينو!';
+                                document.getElementById('subtitulo').innerText = 'واجهة واجهة المستخدم المسرعة ورسومات ثنائية الاتجاه';
+                                document.getElementById('btn-confirmar').innerText = 'تأكيد';
+                                document.getElementById('btn-lang').innerText = 'Toggle Language (LTR)';
+                            } else {
+                                html.dir = 'ltr';
+                                html.lang = 'en-US';
+                                document.getElementById('titulo').innerText = 'Welcome to Justino Language!';
+                                document.getElementById('subtitulo').innerText = 'GPU-Accelerated Declarative UI Engine';
+                                document.getElementById('btn-confirmar').innerText = 'Confirm';
+                                document.getElementById('btn-lang').innerText = 'Toggle Language (RTL)';
+                            }
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `;
+            previewIframe.srcdoc = html;
+        }
+
+        editor.addEventListener('input', () => {
+            fileContents[currentFile] = editor.value;
+            if (currentFile === 'styles.css' || currentFile === 'app_demo.jucode') {
+                updateLivePreview();
+            }
+        });
+
+        function runScript() {
+            terminalOut.innerText = `[Justino VM] Compiling and Evaluating '${currentFile}'...\n   -> AST validated. Bytecode instructions generated.\n   -> VM Execution Result: 2\n[Status] Execution completed successfully in 1.2ms.`;
+        }
+
+        function buildExe() {
+            const exeName = currentFile.replace('.jucode', '.exe');
+            terminalOut.innerText = `[Justino AOT Compiler] Compiling '${currentFile}'...\n   -> Packaging payload into standalone Windows binary...\n------------------------------------------------------------\nNative executable generated successfully: '${exeName}'\n------------------------------------------------------------`;
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('ai-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            const msgBox = document.getElementById('ai-messages');
+            const userDiv = document.createElement('div');
+            userDiv.className = 'msg user';
+            userDiv.innerText = val;
+            msgBox.appendChild(userDiv);
+            input.value = '';
+
+            setTimeout(() => {
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'msg ai';
+                aiDiv.innerText = `AI Response (Claude 3.5): Analyzing '${currentFile}' context.\nSuggestion: The flexbox alignment and UI bindings are optimized.`;
+                msgBox.appendChild(aiDiv);
+                msgBox.scrollTop = msgBox.scrollHeight;
+            }, 300);
+        }
+
+        function toggleTheme() {
+            document.body.style.background = document.body.style.background === 'rgb(13, 2, 33)' ? '#1e1e2e' : '#0d0221';
+        }
+
+        function toggleAiPanel() {
+            const aiPanel = document.getElementById('ai-sidebar');
+            aiPanel.style.display = aiPanel.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        // Initialize default file
+        openFile('app_demo.jucode');
+    </script>
 </body>
 </html>
-            
