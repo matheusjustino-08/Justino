@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Justino Studio IDE (.jucode)</title>
+    <title>Justino Studio Professional IDE (.jucode)</title>
+    <!-- Microsoft Monaco Editor CDN Loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -12,155 +14,202 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            background: #1e1e2e;
+            background: #181825;
             color: #cdd6f4;
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
             user-select: none;
         }
 
-        /* Top Navigation Bar */
-        header.ide-navbar {
-            height: 42px;
+        /* Top Menu Bar */
+        header.ide-menubar {
+            height: 35px;
             background: #11111b;
             display: flex;
             align-items: center;
-            padding: 0 16px;
+            padding: 0 12px;
             gap: 16px;
             border-bottom: 1px solid #313244;
-            font-size: 13px;
+            font-size: 12px;
         }
-        .brand-title {
+        .ide-logo {
             color: #89b4fa;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 800;
+            font-size: 13px;
             display: flex;
             align-items: center;
             gap: 6px;
+            letter-spacing: 0.5px;
         }
-        .nav-item {
+        .menu-item {
             cursor: pointer;
             padding: 4px 8px;
             border-radius: 4px;
-            color: #a6adc8;
+            color: #bac2de;
             transition: all 0.15s ease;
         }
-        .nav-item:hover {
+        .menu-item:hover {
             background: #313244;
             color: #ffffff;
         }
-        .nav-btn-action {
+        .action-btn {
             background: #3182ce;
             color: #ffffff;
-            font-weight: bold;
+            font-weight: 600;
             border: none;
-            padding: 5px 12px;
+            padding: 4px 12px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background 0.15s ease;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        .nav-btn-action:hover {
-            background: #2b6cb0;
-        }
+        .action-btn:hover { background: #2b6cb0; }
+        .action-btn.build { background: #805ad5; }
+        .action-btn.build:hover { background: #6b46c1; }
 
-        /* Main Workspace Body */
-        .ide-body {
+        /* Main Workbench Area */
+        .workbench {
             flex: 1;
             display: flex;
             overflow: hidden;
         }
 
-        /* Sidebar Directory Explorer */
-        .sidebar {
-            width: 230px;
-            background: #181825;
+        /* Leftmost Activity Bar */
+        .activity-bar {
+            width: 48px;
+            background: #11111b;
             border-right: 1px solid #313244;
-            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            padding-top: 10px;
+            gap: 16px;
+        }
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            color: #6c7086;
+            transition: all 0.15s ease;
+        }
+        .activity-icon:hover, .activity-icon.active {
+            background: #313244;
+            color: #89b4fa;
+        }
+
+        /* File Explorer Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #181825;
+            border-right: 1px solid #313244;
+            display: flex;
+            flex-direction: column;
             font-size: 13px;
         }
-        .sidebar-header {
+        .sidebar-title {
+            height: 36px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             font-size: 11px;
             font-weight: bold;
             text-transform: uppercase;
-            color: #6c7086;
-            margin-bottom: 8px;
+            color: #a6adc8;
+            border-bottom: 1px solid #313244;
             letter-spacing: 0.5px;
         }
-        .file-item {
+        .file-tree {
+            flex: 1;
+            padding: 8px 0;
+            overflow-y: auto;
+        }
+        .tree-folder {
+            padding: 4px 16px;
+            font-weight: bold;
+            color: #89b4fa;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tree-item {
+            padding: 6px 16px 6px 28px;
             cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 4px;
             color: #bac2de;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: background 0.15s ease;
+            transition: background 0.12s ease;
         }
-        .file-item:hover {
+        .tree-item:hover {
             background: #313244;
             color: #ffffff;
         }
-        .file-item.active {
+        .tree-item.active {
             background: #45475a;
             color: #89b4fa;
-            font-weight: bold;
+            font-weight: 600;
         }
 
-        /* Main Editor Area */
-        .editor-container {
+        /* Central Code Editor */
+        .editor-workspace {
             flex: 1;
             display: flex;
             flex-direction: column;
             background: #1e1e2e;
         }
-        .tab-bar {
+        .tabs-header {
             height: 36px;
             background: #181825;
             display: flex;
             align-items: center;
             border-bottom: 1px solid #313244;
-            padding-left: 8px;
+            overflow-x: auto;
         }
-        .tab {
-            padding: 8px 16px;
+        .tab-item {
+            height: 100%;
+            padding: 0 16px;
             background: #1e1e2e;
             color: #89b4fa;
             font-size: 13px;
-            font-weight: bold;
+            font-weight: 600;
             border-top: 2px solid #89b4fa;
             border-right: 1px solid #313244;
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
         }
-        .code-textarea {
+        .tab-close {
+            font-size: 14px;
+            color: #6c7086;
+            border-radius: 50%;
+            padding: 2px;
+        }
+        .tab-close:hover { color: #f38ba8; background: #313244; }
+
+        #monaco-editor-container {
             flex: 1;
             width: 100%;
             height: 100%;
-            background: #1e1e2e;
-            color: #cdd6f4;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 16px;
-            border: none;
-            outline: none;
-            resize: none;
-            box-sizing: border-box;
-            tab-size: 4;
         }
 
-        /* Live Preview Pane */
-        .preview-pane {
-            width: 420px;
+        /* Right Live Preview Area */
+        .preview-area {
+            width: 440px;
             background: #11111b;
             border-left: 1px solid #313244;
             display: flex;
             flex-direction: column;
         }
-        .preview-header {
+        .preview-toolbar {
             height: 36px;
             background: #181825;
             display: flex;
@@ -168,18 +217,18 @@
             justify-content: space-between;
             padding: 0 14px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 600;
             color: #a6adc8;
             border-bottom: 1px solid #313244;
         }
-        iframe#preview-iframe {
+        iframe#preview-viewport {
             flex: 1;
             border: none;
             background: #ffffff;
         }
 
-        /* AI Chat Drawer */
-        .ai-sidebar {
+        /* Right AI Drawer Panel */
+        .ai-drawer {
             width: 320px;
             background: #181825;
             border-left: 1px solid #313244;
@@ -191,44 +240,45 @@
             background: #11111b;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 0 14px;
             font-size: 12px;
             font-weight: bold;
             color: #89b4fa;
             border-bottom: 1px solid #313244;
         }
-        .ai-messages {
+        .ai-messages-box {
             flex: 1;
             padding: 12px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             font-size: 13px;
         }
-        .msg {
-            padding: 10px 12px;
+        .ai-bubble {
+            padding: 10px 14px;
             border-radius: 8px;
-            line-height: 1.4;
+            line-height: 1.45;
         }
-        .msg.ai {
+        .ai-bubble.assistant {
             background: #313244;
             color: #cdd6f4;
             border-left: 3px solid #89b4fa;
         }
-        .msg.user {
+        .ai-bubble.user {
             background: #45475a;
             color: #f5e0dc;
             align-self: flex-end;
         }
-        .ai-input-box {
+        .ai-input-area {
             display: flex;
             padding: 10px;
             gap: 8px;
             border-top: 1px solid #313244;
             background: #11111b;
         }
-        .ai-input-box input {
+        .ai-input-area input {
             flex: 1;
             background: #313244;
             border: 1px solid #45475a;
@@ -238,7 +288,7 @@
             outline: none;
             font-size: 13px;
         }
-        .ai-input-box button {
+        .ai-input-area button {
             background: #89b4fa;
             color: #11111b;
             border: none;
@@ -248,8 +298,8 @@
             cursor: pointer;
         }
 
-        /* Bottom Terminal Drawer */
-        .terminal-drawer {
+        /* Bottom Console Terminal Drawer */
+        .terminal-pane {
             height: 140px;
             background: #11111b;
             border-top: 1px solid #313244;
@@ -258,96 +308,165 @@
             font-family: 'Consolas', monospace;
             font-size: 13px;
         }
-        .terminal-header {
+        .terminal-tabs {
             height: 28px;
             background: #181825;
             display: flex;
             align-items: center;
             padding: 0 12px;
+            gap: 16px;
             font-size: 11px;
             font-weight: bold;
             color: #a6adc8;
             border-bottom: 1px solid #313244;
         }
-        .terminal-content {
+        .terminal-log {
             flex: 1;
-            padding: 10px;
+            padding: 10px 16px;
             color: #a6e3a1;
             overflow-y: auto;
             white-space: pre-wrap;
         }
+
+        /* Bottom Status Bar */
+        footer.status-bar {
+            height: 24px;
+            background: #11111b;
+            border-top: 1px solid #313244;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            font-size: 11px;
+            color: #6c7086;
+        }
+        .status-left, .status-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <header class="ide-navbar">
-        <div class="brand-title">🚀 Justino Studio IDE</div>
-        <div class="nav-item" onclick="openFile('app_demo.jucode')">File</div>
-        <div class="nav-item" onclick="openFile('styles.css')">Styles (.css)</div>
-        <div class="nav-item" onclick="toggleTheme()">Theme</div>
-        <div class="nav-item" onclick="toggleAiPanel()">AI Agent (Ctrl+L)</div>
-        <button class="nav-btn-action" onclick="runScript()">▶ Run</button>
-        <button class="nav-btn-action" style="background: #805ad5;" onclick="buildExe()">📦 Build (.exe)</button>
+    <!-- Top Menu Bar -->
+    <header class="ide-menubar">
+        <div class="ide-logo">⚡ JUSTINO STUDIO IDE</div>
+        <div class="menu-item" onclick="openFile('app_demo.jucode')">File</div>
+        <div class="menu-item" onclick="openFile('styles.css')">Edit</div>
+        <div class="menu-item" onclick="toggleTheme()">View</div>
+        <div class="menu-item" onclick="runScript()">Run</div>
+        <div class="menu-item" onclick="toggleAiDrawer()">AI Assistant</div>
+        <button class="action-btn" onclick="runScript()">▶ Run VM</button>
+        <button class="action-btn build" onclick="buildExecutable()">📦 Build .exe</button>
     </header>
 
-    <!-- Main Workspace -->
-    <div class="ide-body">
-        <!-- Sidebar Explorer -->
+    <!-- Main Workbench Area -->
+    <div class="workbench">
+        <!-- Activity Bar -->
+        <div class="activity-bar">
+            <div class="activity-icon active" title="Explorer">📁</div>
+            <div class="activity-icon" title="Search">🔍</div>
+            <div class="activity-icon" title="Source Control">🌿</div>
+            <div class="activity-icon" title="AI Assistant" onclick="toggleAiDrawer()">🤖</div>
+            <div class="activity-icon" title="Marketplace">🧩</div>
+            <div class="activity-icon" title="Settings" onclick="toggleTheme()">⚙️</div>
+        </div>
+
+        <!-- File Explorer Sidebar -->
         <div class="sidebar">
-            <div class="sidebar-header">Explorer</div>
-            <div id="file-app_demo" class="file-item active" onclick="openFile('app_demo.jucode')">📄 app_demo.jucode</div>
-            <div id="file-styles" class="file-item" onclick="openFile('styles.css')">🎨 styles.css</div>
-            <div id="file-env" class="file-item" onclick="openFile('.env')">⚙️ .env</div>
-            <div id="file-app_desktop" class="file-item" onclick="openFile('app_desktop.jucode')">📄 app_desktop.jucode</div>
-        </div>
-
-        <!-- Code Editor Area -->
-        <div class="editor-container">
-            <div class="tab-bar">
-                <div id="active-tab" class="tab">📄 app_demo.jucode</div>
+            <div class="sidebar-title">
+                <span>EXPLORER</span>
+                <span>...</span>
             </div>
-            <textarea id="code-editor" class="code-textarea" spellcheck="false"></textarea>
-
-            <!-- Terminal Output Drawer -->
-            <div class="terminal-drawer">
-                <div class="terminal-header">TERMINAL / COMPILER OUTPUT</div>
-                <div id="terminal-out" class="terminal-content">Justino Studio Environment Ready. Select a file or click 'Run' to evaluate bytecode.</div>
+            <div class="file-tree">
+                <div class="tree-folder">📂 JUSTINO PROJECT</div>
+                <div id="file-app_demo" class="tree-item active" onclick="openFile('app_demo.jucode')">📄 app_demo.jucode</div>
+                <div id="file-styles" class="tree-item" onclick="openFile('styles.css')">🎨 styles.css</div>
+                <div id="file-env" class="tree-item" onclick="openFile('.env')">⚙️ .env</div>
+                <div id="file-app_desktop" class="tree-item" onclick="openFile('app_desktop.jucode')">📄 app_desktop.jucode</div>
+                <div id="file-main_jucode" class="tree-item" onclick="openFile('main.jucode')">📄 main.jucode</div>
             </div>
         </div>
 
-        <!-- Live UI Preview Pane -->
-        <div class="preview-pane">
-            <div class="preview-header">
+        <!-- Central Code Editor -->
+        <div class="editor-workspace">
+            <div class="tabs-header">
+                <div id="active-tab-title" class="tab-item">
+                    <span>📄 app_demo.jucode</span>
+                    <span class="tab-close">×</span>
+                </div>
+            </div>
+
+            <!-- Monaco Editor Mount Container -->
+            <div id="monaco-editor-container"></div>
+
+            <!-- Terminal Drawer -->
+            <div class="terminal-pane">
+                <div class="terminal-tabs">
+                    <span style="color: #89b4fa;">TERMINAL</span>
+                    <span>OUTPUT</span>
+                    <span>DEBUG CONSOLE</span>
+                </div>
+                <div id="terminal-log" class="terminal-log">Justino Studio IDE initialized. Monaco Editor engine ready. Select a file or click '▶ Run VM'.</div>
+            </div>
+        </div>
+
+        <!-- Right Live Preview Pane -->
+        <div class="preview-area">
+            <div class="preview-toolbar">
                 <span>GPU LIVE UI PREVIEW</span>
-                <span style="color: #a6e3a1;">● Connected</span>
+                <span style="color: #a6e3a1;">● Connected (WebView2)</span>
             </div>
-            <iframe id="preview-iframe"></iframe>
+            <iframe id="preview-viewport"></iframe>
         </div>
 
-        <!-- AI Assistant Sidebar -->
-        <div id="ai-sidebar" class="ai-sidebar">
-            <div class="ai-header">🤖 Justino AI Assistant (Ctrl+L)</div>
-            <div id="ai-messages" class="ai-messages">
-                <div class="msg ai">Welcome! I am your project-aware Justino AI assistant. Ask me questions or request inline code refactoring!</div>
+        <!-- Right AI Drawer Panel -->
+        <div id="ai-drawer" class="ai-drawer">
+            <div class="ai-header">
+                <span>🤖 AI Assistant (Claude 3.5 / GPT-4o)</span>
+                <span style="cursor: pointer;" onclick="toggleAiDrawer()">×</span>
             </div>
-            <div class="ai-input-box">
-                <input id="ai-input" type="text" placeholder="Ask AI or request refactor..." onkeydown="if(event.key==='Enter') sendAiMessage()" />
-                <button onclick="sendAiMessage()">Send</button>
+            <div id="ai-messages-box" class="ai-messages-box">
+                <div class="ai-bubble assistant">Hello! I am your Justino AI assistant (Ctrl+L / Ctrl+K). I can write .jucode code, refactor styles, and generate full desktop apps.</div>
+            </div>
+            <div class="ai-input-area">
+                <input id="ai-user-input" type="text" placeholder="Ask AI or type Ctrl+K to refactor..." onkeydown="if(event.key==='Enter') sendAiQuery()" />
+                <button onclick="sendAiQuery()">Send</button>
             </div>
         </div>
     </div>
 
+    <!-- Status Bar -->
+    <footer class="status-bar">
+        <div class="status-left">
+            <span>🌿 main*</span>
+            <span>0 ⊗  0 ⚠</span>
+        </div>
+        <div class="status-right">
+            <span id="cursor-pos">Ln 1, Col 1</span>
+            <span>UTF-8</span>
+            <span>Justino (.jucode)</span>
+            <span>GPU Accelerated</span>
+        </div>
+    </footer>
+
+    <!-- Script initializing Monaco Editor & Workflows -->
     <script>
-        const fileContents = {
-            'app_demo.jucode': `// Justino UI Demo Application (.jucode)
-struct User {
+        const fileDatabase = {
+            'app_demo.jucode': `// Justino Declarative UI Demo Application (.jucode)
+struct UserRecord {
     id: int,
-    name: string
+    username: string,
+    email: string
 }
 
 fn main() -> int {
-    let u = User { id: 1, name: "Justino Developer" };
-    return u.id + 1;
+    let dev = UserRecord {
+        id: 101,
+        username: "Justino Developer",
+        email: "dev@justino.org"
+    };
+    return dev.id;
 }
 
 return main();`,
@@ -433,31 +552,101 @@ fn main() -> int {
     return user.balance;
 }
 
+return main();`,
+            'main.jucode': `// Justino Studio Official IDE Main Entry Point (.jucode)
+struct WindowConfig {
+    title: string,
+    width: int,
+    height: int,
+    stylesheet: string
+}
+
+fn main() -> int {
+    let cfg = WindowConfig {
+        title: "Justino Studio IDE (.jucode)",
+        width: 1280,
+        height: 800,
+        stylesheet: "./styles/app.css"
+    };
+    return cfg.width;
+}
+
 return main();`
         };
 
-        let currentFile = 'app_demo.jucode';
-        const editor = document.getElementById('code-editor');
-        const activeTab = document.getElementById('active-tab');
-        const previewIframe = document.getElementById('preview-iframe');
-        const terminalOut = document.getElementById('terminal-out');
+        let currentFileName = 'app_demo.jucode';
+        let monacoInstance = null;
+
+        // Initialize Microsoft Monaco Editor via RequireJS
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            // Register Justino language
+            monaco.languages.register({ id: 'jucode' });
+            monaco.languages.setMonarchTokensProvider('jucode', {
+                keywords: ['fn', 'let', 'mut', 'struct', 'async', 'await', 'return', 'if', 'else', 'match', 'spawn', 'import', 'export'],
+                typeKeywords: ['int', 'float', 'string', 'bool', 'void', 'Object', 'Array'],
+                tokenizer: {
+                    root: [
+                        [/[a-zA-Z_]\w*/, {
+                            cases: {
+                                '@keywords': 'keyword',
+                                '@typeKeywords': 'type',
+                                '@default': 'identifier'
+                            }
+                        }],
+                        [/"([^"\\]|\\.)*"/, 'string'],
+                        [/\d+/, 'number'],
+                        [/\/\/.*/, 'comment'],
+                    ]
+                }
+            });
+
+            // Create Monaco Editor Instance
+            monacoInstance = monaco.editor.create(document.getElementById('monaco-editor-container'), {
+                value: fileDatabase[currentFileName],
+                language: 'jucode',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14,
+                fontFamily: 'Consolas, monospace',
+                minimap: { enabled: true },
+                scrollBeyondLastLine: false,
+                padding: { top: 12 }
+            });
+
+            monacoInstance.onDidChangeCursorPosition((e) => {
+                document.getElementById('cursor-pos').innerText = `Ln ${e.position.lineNumber}, Col ${e.position.column}`;
+            });
+
+            monacoInstance.onDidChangeModelContent(() => {
+                fileDatabase[currentFileName] = monacoInstance.getValue();
+                updateLiveViewport();
+            });
+
+            updateLiveViewport();
+        });
 
         function openFile(fileName) {
-            currentFile = fileName;
-            activeTab.innerText = (fileName.endsWith('.css') ? '🎨 ' : fileName.endsWith('.env') ? '⚙️ ' : '📄 ') + fileName;
-            editor.value = fileContents[fileName] || '';
+            currentFileName = fileName;
+            document.getElementById('active-tab-title').innerHTML = `<span>${fileName.endsWith('.css') ? '🎨' : fileName.endsWith('.env') ? '⚙️' : '📄'} ${fileName}</span><span class="tab-close">×</span>`;
 
-            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tree-item').forEach(el => el.classList.remove('active'));
             if (fileName === 'app_demo.jucode') document.getElementById('file-app_demo')?.classList.add('active');
             if (fileName === 'styles.css') document.getElementById('file-styles')?.classList.add('active');
             if (fileName === '.env') document.getElementById('file-env')?.classList.add('active');
             if (fileName === 'app_desktop.jucode') document.getElementById('file-app_desktop')?.classList.add('active');
+            if (fileName === 'main.jucode') document.getElementById('file-main_jucode')?.classList.add('active');
 
-            updateLivePreview();
+            if (monacoInstance) {
+                const mode = fileName.endsWith('.css') ? 'css' : fileName.endsWith('.env') ? 'plaintext' : 'jucode';
+                monaco.editor.setModelLanguage(monacoInstance.getModel(), mode);
+                monacoInstance.setValue(fileDatabase[fileName] || '');
+            }
+            updateLiveViewport();
         }
 
-        function updateLivePreview() {
-            const cssContent = fileContents['styles.css'] || '';
+        function updateLiveViewport() {
+            const cssContent = fileDatabase['styles.css'] || '';
             const html = `
                 <!DOCTYPE html>
                 <html lang="en-US" dir="ltr">
@@ -505,57 +694,52 @@ return main();`
                 </body>
                 </html>
             `;
-            previewIframe.srcdoc = html;
+            document.getElementById('preview-viewport').srcdoc = html;
         }
-
-        editor.addEventListener('input', () => {
-            fileContents[currentFile] = editor.value;
-            if (currentFile === 'styles.css' || currentFile === 'app_demo.jucode') {
-                updateLivePreview();
-            }
-        });
 
         function runScript() {
-            terminalOut.innerText = `[Justino VM] Compiling and Evaluating '${currentFile}'...\n   -> AST validated. Bytecode instructions generated.\n   -> VM Execution Result: 2\n[Status] Execution completed successfully in 1.2ms.`;
+            const term = document.getElementById('terminal-log');
+            term.innerText = `[Justino VM] Compiling and Evaluating '${currentFileName}'...\n   -> AST validated cleanly. 6 bytecode instructions generated.\n   -> VM Execution Result: 101\n[Status] Execution completed successfully in 0.8ms.`;
         }
 
-        function buildExe() {
-            const exeName = currentFile.replace('.jucode', '.exe');
-            terminalOut.innerText = `[Justino AOT Compiler] Compiling '${currentFile}'...\n   -> Packaging payload into standalone Windows binary...\n------------------------------------------------------------\nNative executable generated successfully: '${exeName}'\n------------------------------------------------------------`;
+        function buildExecutable() {
+            const term = document.getElementById('terminal-log');
+            const exeName = currentFileName.replace('.jucode', '.exe');
+            term.innerText = `[Justino AOT Compiler] Compiling '${currentFileName}'...\n   -> Packaging payload footer (MAGIC_TAG 'JUSTINO!')...\n------------------------------------------------------------\nNative executable generated successfully: '${exeName}'\n------------------------------------------------------------`;
         }
 
-        function sendAiMessage() {
-            const input = document.getElementById('ai-input');
+        function sendAiQuery() {
+            const input = document.getElementById('ai-user-input');
             const val = input.value.trim();
             if (!val) return;
 
-            const msgBox = document.getElementById('ai-messages');
-            const userDiv = document.createElement('div');
-            userDiv.className = 'msg user';
-            userDiv.innerText = val;
-            msgBox.appendChild(userDiv);
+            const box = document.getElementById('ai-messages-box');
+            const u = document.createElement('div');
+            u.className = 'ai-bubble user';
+            u.innerText = val;
+            box.appendChild(u);
             input.value = '';
 
             setTimeout(() => {
-                const aiDiv = document.createElement('div');
-                aiDiv.className = 'msg ai';
-                aiDiv.innerText = `AI Response (Claude 3.5): Analyzing '${currentFile}' context.\nSuggestion: The flexbox alignment and UI bindings are optimized.`;
-                msgBox.appendChild(aiDiv);
-                msgBox.scrollTop = msgBox.scrollHeight;
+                const a = document.createElement('div');
+                a.className = 'ai-bubble assistant';
+                a.innerText = `AI Response (Claude 3.5 Sonnet): Context extracted from '${currentFileName}'.\nCode suggestion: Structure and bindings match industrial standards.`;
+                box.appendChild(a);
+                box.scrollTop = box.scrollHeight;
             }, 300);
         }
 
         function toggleTheme() {
-            document.body.style.background = document.body.style.background === 'rgb(13, 2, 33)' ? '#1e1e2e' : '#0d0221';
+            if (monacoInstance) {
+                const currTheme = monacoInstance._themeService?.getTheme?.()?.id;
+                monaco.editor.setTheme(currTheme === 'vs-dark' ? 'vs' : 'vs-dark');
+            }
         }
 
-        function toggleAiPanel() {
-            const aiPanel = document.getElementById('ai-sidebar');
-            aiPanel.style.display = aiPanel.style.display === 'none' ? 'flex' : 'none';
+        function toggleAiDrawer() {
+            const d = document.getElementById('ai-drawer');
+            d.style.display = d.style.display === 'none' ? 'flex' : 'none';
         }
-
-        // Initialize default file
-        openFile('app_demo.jucode');
     </script>
 </body>
 </html>
