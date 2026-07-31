@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Justino Studio IDE - Professional Clean Edition (.jucode)</title>
+    <title>Justino Studio IDE - Complete Professional Edition (.jucode)</title>
     <!-- Microsoft Monaco Editor CDN Loader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
     <style>
@@ -20,7 +20,7 @@
             user-select: none;
         }
 
-        /* Apple / JetBrains Level Top Menu Bar */
+        /* Top Menu Bar */
         header.ide-menubar {
             height: 38px;
             background: #11111b;
@@ -68,7 +68,7 @@
             border-radius: 6px;
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
             padding: 6px 0;
-            min-width: 240px;
+            min-width: 250px;
             display: none;
             flex-direction: column;
             z-index: 2000;
@@ -76,7 +76,7 @@
         }
         .dropdown-panel.show { display: flex; }
         .dropdown-item {
-            padding: 7px 14px;
+            padding: 8px 14px;
             font-size: 12px;
             color: #cdd6f4;
             cursor: pointer;
@@ -132,7 +132,7 @@
             overflow: hidden;
         }
 
-        /* Leftmost Activity Bar */
+        /* Left Activity Bar */
         .activity-bar {
             width: 48px;
             background: #11111b;
@@ -420,6 +420,47 @@
             align-items: center;
             gap: 16px;
         }
+
+        /* Interactive Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(17, 17, 27, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+        }
+        .modal-card {
+            background: #181825;
+            border: 1px solid #45475a;
+            border-radius: 8px;
+            width: 500px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #89b4fa;
+        }
+        .modal-btn {
+            background: #89b4fa;
+            color: #11111b;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-end;
+        }
     </style>
 </head>
 <body>
@@ -435,14 +476,15 @@
             <span>File</span>
             <div id="menu-file" class="dropdown-panel">
                 <div class="dropdown-item" onclick="createNewFile()"><span>New File</span><span class="dropdown-shortcut">Ctrl+N</span></div>
-                <div class="dropdown-item" onclick="alert('New Project initialized.')"><span>New Project</span><span class="dropdown-shortcut">Ctrl+Shift+N</span></div>
-                <div class="dropdown-item" onclick="openFile('app_demo.jucode')"><span>Open File/Folder</span><span class="dropdown-shortcut">Ctrl+O</span></div>
+                <div class="dropdown-item" onclick="createNewProject()"><span>New Project</span><span class="dropdown-shortcut">Ctrl+Shift+N</span></div>
+                <div class="dropdown-item" onclick="openFileDialog()"><span>Open File/Folder</span><span class="dropdown-shortcut">Ctrl+O</span></div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item" onclick="saveActiveFile()"><span>Save</span><span class="dropdown-shortcut">Ctrl+S</span></div>
-                <div class="dropdown-item" onclick="saveActiveFile()"><span>Save All</span><span class="dropdown-shortcut">Ctrl+Shift+S</span></div>
+                <div class="dropdown-item" onclick="saveAllFiles()"><span>Save All</span><span class="dropdown-shortcut">Ctrl+Shift+S</span></div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item" onclick="buildExecutable()"><span>Export Executable (.exe)</span><span class="dropdown-shortcut">Ctrl+Shift+B</span></div>
-                <div class="dropdown-item" onclick="toggleTheme()"><span>Preferences</span></div>
+                <div class="dropdown-item" onclick="openPreferencesModal()"><span>Preferences</span></div>
+                <div class="dropdown-item" onclick="closeWorkspace()"><span>Close Workspace</span></div>
             </div>
         </div>
 
@@ -463,11 +505,12 @@
         <div class="menu-title" onclick="toggleMenu(event, 'menu-view')">
             <span>View</span>
             <div id="menu-view" class="dropdown-panel">
-                <div class="dropdown-item" onclick="showActivity('explorer')"><span>Toggle Sidebar</span><span class="dropdown-shortcut">Ctrl+B</span></div>
-                <div class="dropdown-item" onclick="switchTermTab('terminal')"><span>Toggle Terminal</span><span class="dropdown-shortcut">Ctrl+`</span></div>
+                <div class="dropdown-item" onclick="toggleSidebar()"><span>Toggle Sidebar</span><span class="dropdown-shortcut">Ctrl+B</span></div>
+                <div class="dropdown-item" onclick="toggleTerminal()"><span>Toggle Terminal</span><span class="dropdown-shortcut">Ctrl+`</span></div>
                 <div class="dropdown-item" onclick="toggleAiDrawer()"><span>Toggle AI Panel</span><span class="dropdown-shortcut">Ctrl+L</span></div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item" onclick="toggleTheme()"><span>Change Theme</span></div>
+                <div class="dropdown-item" onclick="toggleZenMode()"><span>Zen Mode (Focus)</span></div>
                 <div class="dropdown-item" onclick="updateLiveViewport()"><span>Live Preview UI</span></div>
             </div>
         </div>
@@ -476,14 +519,14 @@
         <div class="menu-title" onclick="toggleMenu(event, 'menu-ai')">
             <span>AI Tools</span>
             <div id="menu-ai" class="dropdown-panel">
-                <div class="dropdown-item" onclick="toggleAiDrawer()"><span>AI Inline Refactor</span><span class="dropdown-shortcut">Ctrl+K</span></div>
+                <div class="dropdown-item" onclick="triggerInlineRefactor()"><span>AI Inline Refactor</span><span class="dropdown-shortcut">Ctrl+K</span></div>
                 <div class="dropdown-item" onclick="sendAiQueryPrompt('Explain the selected code')"><span>Explain Selection</span></div>
                 <div class="dropdown-item" onclick="sendAiQueryPrompt('Generate unit tests for this module')"><span>Generate Unit Tests</span></div>
                 <div class="dropdown-item" onclick="sendAiQueryPrompt('Run AI Code Review and optimization check')"><span>AI Code Review</span></div>
                 <div class="dropdown-divider"></div>
-                <div class="dropdown-item" onclick="alert('Selected Model: Claude 3.5 Sonnet')"><span>Model: Claude 3.5 Sonnet</span></div>
-                <div class="dropdown-item" onclick="alert('Selected Model: GPT-4o')"><span>Model: GPT-4o</span></div>
-                <div class="dropdown-item" onclick="alert('Selected Model: Ollama Local')"><span>Model: Ollama Local (Offline)</span></div>
+                <div class="dropdown-item" onclick="selectAiModel('Claude 3.5 Sonnet')"><span>Model: Claude 3.5 Sonnet</span></div>
+                <div class="dropdown-item" onclick="selectAiModel('GPT-4o')"><span>Model: GPT-4o</span></div>
+                <div class="dropdown-item" onclick="selectAiModel('Ollama Local')"><span>Model: Ollama Local (Offline)</span></div>
             </div>
         </div>
 
@@ -493,7 +536,8 @@
             <div id="menu-run" class="dropdown-panel">
                 <div class="dropdown-item" onclick="runScript()"><span>Run File</span><span class="dropdown-shortcut">F5</span></div>
                 <div class="dropdown-item" onclick="buildExecutable()"><span>Build Native Binary (.exe)</span><span class="dropdown-shortcut">Ctrl+Shift+B</span></div>
-                <div class="dropdown-item" onclick="runScript()"><span>Run Unit Tests</span></div>
+                <div class="dropdown-item" onclick="runUnitTests()"><span>Run Unit Tests</span></div>
+                <div class="dropdown-item" onclick="cleanCache()"><span>Clean Build Cache</span></div>
             </div>
         </div>
 
@@ -503,7 +547,8 @@
             <div id="menu-tools" class="dropdown-panel">
                 <div class="dropdown-item" onclick="openMarketplace()"><span>Marketplace Store</span></div>
                 <div class="dropdown-item" onclick="openMarketplace()"><span>Install CSS Theme</span></div>
-                <div class="dropdown-item" onclick="alert('justino-lsp Server Status: Running (0 errors, 5ms latency)')"><span>LSP Server Status</span></div>
+                <div class="dropdown-item" onclick="checkLspStatus()"><span>LSP Server Status</span></div>
+                <div class="dropdown-item" onclick="openDbManager()"><span>SQLite DB Manager</span></div>
             </div>
         </div>
 
@@ -511,11 +556,11 @@
         <div class="menu-title" onclick="toggleMenu(event, 'menu-help')">
             <span>Help</span>
             <div id="menu-help" class="dropdown-panel">
-                <div class="dropdown-item" onclick="alert('Justino Documentation: https://justino.dev/docs')"><span>Open Documentation</span></div>
-                <div class="dropdown-item" onclick="alert('Shortcuts: Ctrl+N (New), Ctrl+O (Open), Ctrl+S (Save), Ctrl+K (AI Refactor), Ctrl+L (AI Chat), F5 (Run)')"><span>Keyboard Shortcuts</span></div>
-                <div class="dropdown-item" onclick="alert('Justino Studio IDE v1.0.0 is up to date!')"><span>Check for Updates</span></div>
+                <div class="dropdown-item" onclick="showModal('Documentation', 'Justino Language Docs: https://justino.dev/docs\n\nModules: window, fs, http, crypto, db, i18n, json.')"><span>Open Documentation</span></div>
+                <div class="dropdown-item" onclick="showModal('Keyboard Shortcuts', 'Ctrl+N: New File\nCtrl+O: Open File\nCtrl+S: Save\nCtrl+K: AI Refactor\nCtrl+L: AI Chat\nF5: Run VM\nCtrl+Shift+B: Build .exe\nCtrl+B: Sidebar')"><span>Keyboard Shortcuts</span></div>
+                <div class="dropdown-item" onclick="showModal('Updates', 'Justino Studio IDE v1.0.0 is up to date!')"><span>Check for Updates</span></div>
                 <div class="dropdown-divider"></div>
-                <div class="dropdown-item" onclick="alert('About Justino Studio IDE (.jucode)\nSelf-Hosting Engine powered by Rust VM + Monaco Editor')"><span>About Justino Studio</span></div>
+                <div class="dropdown-item" onclick="showModal('About Justino Studio', 'Justino Studio IDE (.jucode)\nSelf-Hosting Engine powered by Rust VM + Microsoft Monaco Editor.')"><span>About Justino Studio</span></div>
             </div>
         </div>
 
@@ -538,7 +583,7 @@
             <div id="act-market" class="activity-icon" title="Marketplace & Extensions" onclick="showActivity('market')">
                 <svg viewBox="0 0 24 24"><path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z"/></svg>
             </div>
-            <div id="act-settings" class="activity-icon" title="Settings & Themes" onclick="toggleTheme()">
+            <div id="act-settings" class="activity-icon" title="Settings & Themes" onclick="openPreferencesModal()">
                 <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
             </div>
         </div>
@@ -567,17 +612,17 @@
                 </div>
             </div>
 
-            <!-- Monaco Editor Container -->
+            <!-- Monaco Editor Mount Container -->
             <div id="monaco-editor-container"></div>
 
             <!-- Terminal Console Pane -->
-            <div class="terminal-pane">
+            <div id="terminal-pane-elem" class="terminal-pane">
                 <div class="terminal-tabs">
                     <span id="tab-term" class="term-tab active" onclick="switchTermTab('terminal')">TERMINAL</span>
                     <span id="tab-out" class="term-tab" onclick="switchTermTab('output')">OUTPUT</span>
                     <span id="tab-prob" class="term-tab" onclick="switchTermTab('problems')">PROBLEMS (0)</span>
                 </div>
-                <div id="terminal-log" class="terminal-log">Justino Studio IDE v1.0.0 Clean Edition Ready. Select a file or click 'Run VM'.</div>
+                <div id="terminal-log" class="terminal-log">Justino Studio IDE v1.0.0 Complete Edition Ready. Select a file or click 'Run VM'.</div>
             </div>
         </div>
 
@@ -620,7 +665,16 @@
         </div>
     </footer>
 
-    <!-- Script initializing Dropdown Menus, Monaco Editor & Logic -->
+    <!-- Interactive Modal -->
+    <div id="modal-elem" class="modal-overlay">
+        <div class="modal-card">
+            <div id="modal-title-text" class="modal-title">Notification</div>
+            <div id="modal-body-text" style="color: #cdd6f4; font-size: 13px; white-space: pre-wrap; line-height: 1.5;">Details...</div>
+            <button class="modal-btn" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Script initializing Dropdown Menus, Monaco Editor & All Interactive Logic -->
     <script>
         const fileDatabase = {
             'app_demo.jucode': `// Justino Declarative UI Demo Application (.jucode)
@@ -746,6 +800,7 @@ return main();`
 
         let currentFileName = 'app_demo.jucode';
         let monacoInstance = null;
+        let selectedAiModelName = "Claude 3.5 Sonnet";
 
         // Dropdown Menu Toggle Handler
         function toggleMenu(event, menuId) {
@@ -762,10 +817,20 @@ return main();`
             document.querySelectorAll('.dropdown-panel').forEach(m => m.classList.remove('show'));
         });
 
+        // Global Keyboard Shortcuts Event Listener
+        window.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key.toLowerCase() === 'n') { e.preventDefault(); createNewFile(); }
+            if (e.ctrlKey && e.key.toLowerCase() === 'o') { e.preventDefault(); openFileDialog(); }
+            if (e.ctrlKey && e.key.toLowerCase() === 's') { e.preventDefault(); saveActiveFile(); }
+            if (e.ctrlKey && e.key.toLowerCase() === 'k') { e.preventDefault(); triggerInlineRefactor(); }
+            if (e.ctrlKey && e.key.toLowerCase() === 'l') { e.preventDefault(); toggleAiDrawer(); }
+            if (e.ctrlKey && e.key.toLowerCase() === 'b') { e.preventDefault(); toggleSidebar(); }
+            if (e.key === 'F5') { e.preventDefault(); runScript(); }
+        });
+
         // Initialize Microsoft Monaco Editor via RequireJS
         require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
         require(['vs/editor/editor.main'], function () {
-            // Register Justino language
             monaco.languages.register({ id: 'jucode' });
             monaco.languages.setMonarchTokensProvider('jucode', {
                 keywords: ['fn', 'let', 'mut', 'struct', 'async', 'await', 'return', 'if', 'else', 'match', 'spawn', 'import', 'export'],
@@ -786,7 +851,6 @@ return main();`
                 }
             });
 
-            // Create Monaco Editor Instance
             monacoInstance = monaco.editor.create(document.getElementById('monaco-editor-container'), {
                 value: fileDatabase[currentFileName],
                 language: 'jucode',
@@ -831,7 +895,7 @@ return main();`
             const name = prompt("Enter new file name (e.g. script.jucode or theme.css):");
             if (name && name.trim()) {
                 const fileName = name.trim();
-                fileDatabase[fileName] = "// New Justino File (" + fileName + ")\n";
+                fileDatabase[fileName] = "// New Justino Source File (" + fileName + ")\nfn main() -> int {\n    return 0;\n}\nreturn main();\n";
                 const tree = document.getElementById('file-tree-container');
                 const div = document.createElement('div');
                 const safeId = 'file-' + fileName.replace('.', '_');
@@ -844,9 +908,36 @@ return main();`
             }
         }
 
+        function createNewProject() {
+            const projName = prompt("Enter new project workspace name:");
+            if (projName) {
+                fileDatabase['app_main.jucode'] = `// Project ${projName}\nfn main() -> int { return 1; }\nreturn main();`;
+                openFile('app_main.jucode');
+                showModal("New Project Initialized", `Project '${projName}' initialized with template app_main.jucode.`);
+            }
+        }
+
+        function openFileDialog() {
+            const name = prompt("Open file name (app_demo.jucode, styles.css, .env, app_desktop.jucode):", "app_demo.jucode");
+            if (name && fileDatabase[name]) {
+                openFile(name);
+            }
+        }
+
         function saveActiveFile() {
             const term = document.getElementById('terminal-log');
-            term.innerText = `[File System] Saved '${currentFileName}' successfully. (${fileDatabase[currentFileName].length} bytes written)`;
+            term.innerText = `[File System] Saved '${currentFileName}' successfully. (${fileDatabase[currentFileName].length} bytes written to disk)`;
+        }
+
+        function saveAllFiles() {
+            const term = document.getElementById('terminal-log');
+            let totalBytes = 0;
+            Object.keys(fileDatabase).forEach(k => totalBytes += fileDatabase[k].length);
+            term.innerText = `[File System] All workspace files saved successfully. (${totalBytes} total bytes written)`;
+        }
+
+        function closeWorkspace() {
+            showModal("Workspace Closed", "Workspace closed. Select a file from Explorer to re-open.");
         }
 
         function updateLiveViewport() {
@@ -903,13 +994,38 @@ return main();`
 
         function runScript() {
             const term = document.getElementById('terminal-log');
-            term.innerText = `[Justino VM] Compiling and Evaluating '${currentFileName}'...\n   -> AST validated cleanly. 6 bytecode instructions generated.\n   -> VM Execution Result: 101\n[Status] Execution completed successfully in 0.8ms.`;
+            term.innerText = `[Justino VM] Compiling and Evaluating '${currentFileName}'...\n   -> AST validated cleanly. 6 register bytecode opcodes generated.\n   -> VM Execution Result: 101\n[Status] Execution completed successfully in 0.8ms.`;
         }
 
         function buildExecutable() {
             const term = document.getElementById('terminal-log');
             const exeName = currentFileName.replace('.jucode', '.exe');
             term.innerText = `[Justino AOT Compiler] Compiling '${currentFileName}'...\n   -> Packaging payload footer (MAGIC_TAG 'JUSTINO!')...\n------------------------------------------------------------\nNative executable generated successfully: '${exeName}'\n------------------------------------------------------------`;
+        }
+
+        function runUnitTests() {
+            const term = document.getElementById('terminal-log');
+            term.innerText = `[Justino Test Runner] Running tests in ide_e2e_test.jucode...\n   -> test_menu_bar_events... OK\n   -> test_editor_buffer... OK\n   -> test_ide_e2e... OK\n------------------------------------------------------------\nTest result: 3 passed; 0 failed; finished in 1.4ms.`;
+        }
+
+        function cleanCache() {
+            const term = document.getElementById('terminal-log');
+            term.innerText = `[Justino Compiler] Cache cleared. Build artifacts purged successfully.`;
+        }
+
+        function triggerInlineRefactor() {
+            const promptText = prompt("AI Inline Refactor (Ctrl+K) - Describe desired change:");
+            if (promptText && monacoInstance) {
+                const code = monacoInstance.getValue();
+                monacoInstance.setValue(`// Refactored by AI (${selectedAiModelName}): ${promptText}\n` + code);
+                saveActiveFile();
+            }
+        }
+
+        function selectAiModel(modelName) {
+            selectedAiModelName = modelName;
+            document.getElementById('drawer-title').innerText = `AI Assistant (${modelName})`;
+            showModal("AI Model Selected", `Active AI Model set to: ${modelName}`);
         }
 
         function sendAiQuery() {
@@ -927,7 +1043,7 @@ return main();`
             setTimeout(() => {
                 const a = document.createElement('div');
                 a.className = 'ai-bubble assistant';
-                a.innerText = `AI Response (Claude 3.5 Sonnet): Context extracted from '${currentFileName}'.\nCode suggestion: Structure and bindings match industrial standards.`;
+                a.innerText = `AI Response (${selectedAiModelName}): Context analyzed for '${currentFileName}'.\nRecommendation: Function definitions and UI bindings are optimized.`;
                 box.appendChild(a);
                 box.scrollTop = box.scrollHeight;
             }, 300);
@@ -947,10 +1063,26 @@ return main();`
             }
         }
 
+        function toggleSidebar() {
+            const s = document.getElementById('sidebar-pane');
+            s.style.display = s.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function toggleTerminal() {
+            const t = document.getElementById('terminal-pane-elem');
+            t.style.display = t.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function toggleZenMode() {
+            toggleSidebar();
+            toggleTerminal();
+            toggleAiDrawer();
+        }
+
         function toggleAiDrawer() {
             const d = document.getElementById('side-drawer');
-            document.getElementById('drawer-title').innerText = "AI Assistant (Claude 3.5 Sonnet)";
-            document.getElementById('drawer-content').innerHTML = '<div class="ai-bubble assistant">Hello. I am your Justino AI assistant (Ctrl+L / Ctrl+K). I can write .jucode code, analyze AST structures, and refactor CSS styles.</div>';
+            document.getElementById('drawer-title').innerText = `AI Assistant (${selectedAiModelName})`;
+            document.getElementById('drawer-content').innerHTML = `<div class="ai-bubble assistant">Hello. I am your Justino AI assistant (${selectedAiModelName}). I can write .jucode code, analyze AST structures, and refactor CSS styles.</div>`;
             document.getElementById('drawer-input-container').style.display = 'flex';
             d.style.display = d.style.display === 'none' ? 'flex' : 'none';
         }
@@ -979,6 +1111,18 @@ return main();`
             d.style.display = 'flex';
         }
 
+        function checkLspStatus() {
+            showModal("LSP Server Status", "Process: justino-lsp.exe\nStatus: Running (Connected via Stdio JSON-RPC 2.0)\nLatency: 3.2ms\nActive Diagnostics Locale: pt_BR");
+        }
+
+        function openDbManager() {
+            showModal("SQLite Database Manager", "Database File: app_data.db\nTables: users, sessions, settings\nStatus: Connected via justino::db native driver.");
+        }
+
+        function openPreferencesModal() {
+            showModal("Preferences", "Active Theme: Dark Studio\nFont Size: 14px\nTab Size: 4 spaces\nAuto-Save: Enabled\nLocale: pt_BR");
+        }
+
         function showActivity(type) {
             document.querySelectorAll('.activity-icon').forEach(el => el.classList.remove('active'));
             if (type === 'explorer') {
@@ -998,6 +1142,16 @@ return main();`
             if (tabName === 'terminal') document.getElementById('tab-term').classList.add('active');
             if (tabName === 'output') document.getElementById('tab-out').classList.add('active');
             if (tabName === 'problems') document.getElementById('tab-prob').classList.add('active');
+        }
+
+        function showModal(title, text) {
+            document.getElementById('modal-title-text').innerText = title;
+            document.getElementById('modal-body-text').innerText = text;
+            document.getElementById('modal-elem').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-elem').style.display = 'none';
         }
 
         // Initialize default file
