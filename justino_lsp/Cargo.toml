@@ -1,0 +1,15 @@
+[package]
+name = "justino_lsp"
+version = "0.1.0"
+edition = "2021"
+authors = ["Justino Language Team"]
+description = "Language Server Protocol (LSP) Server for the Justino Programming Language (.jucode)"
+
+[dependencies]
+justino_core = { path = "../justino_core" }
+justino_ui = { path = "../justino_ui" }
+justino_stdlib = { path = "../justino_stdlib" }
+
+[[bin]]
+name = "justino-lsp"
+path = "src/main.rs"

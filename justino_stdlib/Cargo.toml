@@ -1,0 +1,10 @@
+[package]
+name = "justino_stdlib"
+version = "0.1.0"
+edition = "2021"
+authors = ["Justino Language Team"]
+description = "Native Standard Library ('Batteries Included') for the Justino Programming Language (.jucode)"
+
+[dependencies]
+justino_core = { path = "../justino_core" }
+justino_ui = { path = "../justino_ui" }

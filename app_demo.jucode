@@ -1,0 +1,48 @@
+// Declarative UI and i18n Demo Application in Justino (.jucode)
+
+struct AppState {
+    current_locale: string,
+    user_name: string,
+    click_count: int
+}
+
+fn create_initial_state() -> AppState {
+    return AppState {
+        current_locale: "en-US",
+        user_name: "Justino Developer",
+        click_count: 0
+    };
+}
+
+fn toggle_language(state: AppState) -> AppState {
+    if state.current_locale == "en-US" {
+        return AppState {
+            current_locale: "ar-SA",
+            user_name: state.user_name,
+            click_count: state.click_count + 1
+        };
+    } else {
+        return AppState {
+            current_locale: "en-US",
+            user_name: state.user_name,
+            click_count: state.click_count + 1
+        };
+    }
+}
+
+fn main() -> int {
+    let mut app = create_initial_state();
+    let msg_init = "Starting Justino UI in ${app.current_locale}...";
+
+    // Toggle to Arabic (ar-SA) to test Bidi RTL layout mirroring
+    app = toggle_language(app);
+    let msg_arabic = "Locale dynamically changed to ${app.current_locale} (RTL active)";
+
+    // Toggle back to English (en-US)
+    app = toggle_language(app);
+    let msg_en = "Locale toggled back to ${app.current_locale} (LTR active)";
+
+    return app.click_count; // Returns 2 successful language toggles
+}
+
+return main();

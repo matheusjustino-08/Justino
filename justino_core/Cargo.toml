@@ -1,0 +1,12 @@
+[package]
+name = "justino_core"
+version = "0.1.0"
+edition = "2021"
+authors = ["Justino Language Authors"]
+description = "Core engine for the Justino programming language (.jucode)"
+
+[dependencies]
+# Standard dependencies can be added here if needed.
+# All modules use pure Rust std to ensure maximum performance and zero dependency overhead.
+
+[dev-dependencies]

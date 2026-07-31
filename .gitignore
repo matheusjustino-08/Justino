@@ -1,0 +1,13 @@
+# Justino Project .gitignore
+
+# Cargo build target directories
+/target/
+**/target/
+
+# Local database files
+*.db
+
+# Temporary logs & artifacts
+*.log
+.DS_Store
+Thumbs.db

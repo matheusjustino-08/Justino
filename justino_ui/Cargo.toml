@@ -1,0 +1,11 @@
+[package]
+name = "justino_ui"
+version = "0.1.0"
+edition = "2021"
+authors = ["Justino Language UI Authors"]
+description = "GPU-Accelerated Declarative UI, CSS3 & i18n Engine for Justino (.jucode)"
+
+[dependencies]
+justino_core = { path = "../justino_core" }
+
+[dev-dependencies]
