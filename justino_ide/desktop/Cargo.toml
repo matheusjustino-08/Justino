@@ -8,6 +8,8 @@ description = "Justino Studio Native IDE Executable"
 [dependencies]
 wry = "0.22"
 tao = "0.15"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 
 # A flag below hides the Windows CMD terminal from spawning behind the UI!
 # It makes it a pure GUI app.

@@ -1061,6 +1061,8 @@ dependencies = [
 name = "justino-studio"
 version = "1.0.0"
 dependencies = [
+ "serde",
+ "serde_json",
  "tao",
  "wry",
 ]
