@@ -1,0 +1,16 @@
+[package]
+name = "justino_ide"
+version = "0.1.0"
+edition = "2021"
+authors = ["Justino Language Team"]
+description = "Official Desktop IDE for the Justino Programming Language (.jucode) built with Tauri v2 and Rust"
+
+[dependencies]
+justino_core = { path = "../../justino_core" }
+justino_ui = { path = "../../justino_ui" }
+justino_stdlib = { path = "../../justino_stdlib" }
+justino_lsp = { path = "../../justino_lsp" }
+
+[[bin]]
+name = "justino_ide"
+path = "src/main.rs"

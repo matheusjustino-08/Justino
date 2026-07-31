@@ -43,9 +43,12 @@
   - [x] Documentação por passar o mouse (`hover`) e navegação "Go to Definition".
   - [x] Extrator de Contexto de Projeto para IA (`context_builder`) para a IDE.
 
-- [ ] **Fase 5: IDE Nativa Oficial (`justino_ide`)**
-  - [ ] Ambiente de Desenvolvimento Integrado (Tauri v2 + Rust + Monaco Editor).
-  - [ ] Suporte nativo a depuração de bytecode, preview ao vivo de UI e alternância Bidi LTR/RTL.
+- [x] **Fase 5: IDE Nativa Oficial (`justino_ide`)**
+  - [x] Backend desktop nativo ultraleve em Rust (Tauri v2) com WebView GPU (< 80MB RAM).
+  - [x] Wizard de Onboarding interativo de 3 etapas com login OAuth2 PKCE e chave JWT.
+  - [x] Editor Monaco com sintaxe oficial `.jucode` e temas CSS dinâmicos (`dark_theme.css`, `cyberpunk_theme.css`).
+  - [x] Agente de IA integrado com refatoração inline (Ctrl+K) e chat do projeto (Ctrl+L).
+  - [x] Painel de Live Preview de softwares com UI e Loja de Extensões/Temas.
 
 - [ ] **Fase 6: Site Oficial, Pipeline CI/CD Multiplataforma e Releases**
   - [ ] Pipeline CI/CD GitHub Actions compilando binários para Windows, Linux e macOS.

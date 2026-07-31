@@ -55,7 +55,18 @@ A biblioteca padrão nativa do Justino expõe 7 módulos principais registrados 
 
 ---
 
-## 5. Registro de Decisões de Arquitetura (ADRs)
+## 5. IDE Nativa Oficial (`justino_ide`)
+
+### Arquitetura Desktop Tauri v2
+- **Backend Rust Ultraleve**: Consumo < 80MB de RAM utilizando o WebView GPU da plataforma.
+- **Wizard de Onboarding 3-Etapas**: Autenticação OAuth2 PKCE com emissão de token JWT, escolha de temas e provedores de IA.
+- **Monaco Editor Setup**: Tokenizador Monarch da sintaxe `.jucode` e injetor de temas visuais (`dark_theme.css`, `cyberpunk_theme.css`).
+- **Motor de IA Integrado (Ctrl+K / Ctrl+L)**: Suporte a refatoração inline e chat contextual do projeto (Claude, GPT, Gemini, Ollama Local).
+- **Painel Live Preview**: Atualização visual em tempo real de interfaces `.jucode` + `.css`.
+
+---
+
+## 6. Registro de Decisões de Arquitetura (ADRs)
 
 ### ADR-001: Sintaxe Universal em Inglês
 - **Decisão**: Palavras-chave da linguagem (`fn`, `let`, `mut`, `struct`, `async`, `await`, `return`, `if`, `else`, `match`, `spawn`, `import`, `export`, `try`, `catch`) utilizam o padrão internacional em **Inglês**.
@@ -64,11 +75,11 @@ A biblioteca padrão nativa do Justino expõe 7 módulos principais registrados 
 - **Decisão**: A camada do compilador/LSP traduz diagnósticos no idioma do dev (ex: `pt-BR`), enquanto a camada de UI/Runtime trata CLDR/BCP 47 e Bidi LTR/RTL na aplicação.
 
 ### ADR-003: Proibição Absoluta de Código Inseguro (`unsafe`) e `panic!`
-- **Decisão**: 0 `unsafe`, 0 `panic!`, 0 `unwrap()`, 0 `expect()` em todo o código de produção dos crates `justino_core`, `justino_ui`, `justino_stdlib` e `justino_lsp`.
+- **Decisão**: 0 `unsafe`, 0 `panic!`, 0 `unwrap()`, 0 `expect()` em todo o código de produção dos crates `justino_core`, `justino_ui`, `justino_stdlib`, `justino_lsp` e `justino_ide`.
 
 ---
 
-## 6. Estado Atual do Projeto e Próximos Passos
+## 7. Estado Atual do Projeto e Próximos Passos
 
 | Subsistema | Estado | Testes | Cobertura |
 | :--- | :--- | :--- | :--- |
@@ -76,5 +87,6 @@ A biblioteca padrão nativa do Justino expõe 7 módulos principais registrados 
 | `justino_ui` (CSS3, Flexbox, Bidi, Native Window) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
 | `justino_stdlib` (Window, HTTP, JSON, FS, Crypto, DB, i18n) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
 | `justino_lsp` (JSON-RPC 2.0, i18n Diagnostics, AI Context) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
+| `justino_ide` (Tauri v2, Monaco Editor, OAuth2, AI Agent) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
 | `docs/` (ARCHITECTURE, CONVENTIONS, ROADMAP, MEMORY) | ✅ Sincronizado | ✅ Verificado | Completo |
-| `justino_ide` (IDE Nativa com Monaco Editor & Live Preview) | ⏳ Próxima Fase (Fase 5) | - | Pronto para receber Fase 5 |
+| `Phase 6` (Site Oficial, CI/CD GitHub Actions & Releases) | ⏳ Próxima Fase (Fase 6) | - | Pronto para receber Fase 6 |

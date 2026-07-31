@@ -16,9 +16,9 @@ pub fn launch_win32_window(window: &mut Window) -> Result<(), String> {
     let css_content = if window.stylesheet.rules.is_empty() {
         fs::read_to_string("styles.css")
             .or_else(|_| fs::read_to_string("../styles.css"))
-            .unwrap_or_default()
+            .unwrap_or_else(|_| "window { background-color: #f4f6f9; padding: 24px; }".to_string())
     } else {
-        include_str!("../../../styles.css").to_string()
+        "window { background-color: #f4f6f9; padding: 24px; }".to_string()
     };
 
     let is_rtl = window.locale.is_rtl();

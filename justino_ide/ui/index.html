@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justino Studio IDE (.jucode)</title>
+    <link rel="stylesheet" href="src/onboarding/onboarding.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 100vw; height: 100vh; overflow: hidden; display: flex; flex-direction: column; background: #1e1e2e; color: #cdd6f4; font-family: 'Segoe UI', sans-serif; }
+        header.ide-navbar { height: 40px; background: #11111b; display: flex; align-items: center; padding: 0 16px; gap: 20px; border-bottom: 1px solid #313244; font-size: 14px; }
+        .ide-body { flex: 1; display: flex; }
+        .sidebar { width: 220px; background: #181825; border-right: 1px solid #313244; padding: 12px; font-size: 13px; }
+        .editor-container { flex: 1; display: flex; flex-direction: column; }
+        .editor-pane { flex: 1; background: #1e1e2e; padding: 16px; font-family: monospace; }
+        .preview-pane { width: 380px; background: #11111b; border-left: 1px solid #313244; display: flex; flex-direction: column; }
+        .preview-header { height: 32px; background: #181825; display: flex; align-items: center; padding: 0 12px; font-size: 12px; border-bottom: 1px solid #313244; }
+        iframe#preview-iframe { flex: 1; border: none; background: #fff; }
+        .ai-panel-container { width: 300px; background: #181825; border-left: 1px solid #313244; display: flex; flex-direction: column; }
+        .ai-messages { flex: 1; padding: 12px; overflow-y: auto; font-size: 13px; }
+        .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; }
+        .msg.ai { background: #313244; color: #89b4fa; }
+        .msg.user { background: #45475a; color: #f5e0dc; }
+        .ai-input-box { display: flex; padding: 8px; gap: 6px; border-top: 1px solid #313244; }
+        .ai-input-box input { flex: 1; background: #313244; border: none; color: #fff; padding: 6px 10px; border-radius: 4px; }
+        .ai-input-box button { background: #89b4fa; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header class="ide-navbar">
+        <strong>Justino Studio IDE</strong>
+        <span>File</span>
+        <span>Edit</span>
+        <span>View</span>
+        <span>Run</span>
+        <span>Build (.exe)</span>
+    </header>
+
+    <div class="ide-body">
+        <div class="sidebar">
+            <h4 style="margin-bottom: 10px;">Explorer</h4>
+            <div>📄 app_demo.jucode</div>
+            <div>📄 styles.css</div>
+            <div>📄 .env</div>
+        </div>
+
+        <div class="editor-container">
+            <div class="editor-pane">
+                <pre><code>// Justino Studio IDE (.jucode)
+fn main() -> int {
+    let app = window.create({});
+    return 0;
+}
+return main();</code></pre>
+            </div>
+        </div>
+
+        <div class="preview-pane">
+            <div class="preview-header">Live UI Preview</div>
+            <iframe id="preview-iframe"></iframe>
+        </div>
+
+        <div id="ai-panel-container" class="ai-panel-container"></div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
+            

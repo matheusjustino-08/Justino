@@ -1,0 +1,17 @@
+/* Dark Studio Official Theme (dark_theme.css) */
+:root {
+    --bg-primary: #1e1e2e;
+    --bg-secondary: #181825;
+    --bg-card: #313244;
+    --text-primary: #cdd6f4;
+    --text-secondary: #a6adc8;
+    --accent: #89b4fa;
+    --accent-hover: #74c7ec;
+    --border: #45475a;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+}
