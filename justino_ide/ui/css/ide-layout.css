@@ -1,0 +1,280 @@
+/* IDE Editor Layout - Split View Architecture */
+
+.ide-grid {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: var(--c-dark-base);
+}
+
+/* Glass Menu Bar */
+.menu-bar {
+  height: 40px;
+  background-color: rgba(13, 15, 18, 0.6);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-size: 13px;
+  color: var(--c-text-primary);
+  -webkit-app-region: drag;
+}
+
+.menu-group {
+  display: flex;
+  gap: 16px;
+  -webkit-app-region: no-drag;
+}
+.menu-item {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.menu-item:hover {
+  background-color: var(--c-surface);
+  color: var(--c-electric);
+}
+
+.menu-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  -webkit-app-region: no-drag;
+}
+.badge-lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background-color: var(--c-surface);
+  border: 1px solid var(--c-border);
+  font-size: 12px;
+  cursor: pointer;
+}
+.badge-lang span {
+  width: 8px;
+  height: 8px;
+  background-color: var(--c-mint);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 8px var(--c-mint);
+}
+.avatar {
+  width: 24px;
+  height: 24px;
+  background-color: var(--c-surface);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--c-border);
+  cursor: pointer;
+}
+
+/* IDE Body (Activity Bar + Split View) */
+.ide-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Thin Left Activity Bar */
+.activity-bar {
+  width: 48px;
+  background-color: var(--c-dark-base);
+  border-right: 1px solid var(--c-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 12px;
+  gap: 16px;
+}
+.act-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--c-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.act-icon:hover, .act-icon.active {
+  color: var(--c-electric);
+  background-color: rgba(0, 102, 255, 0.08);
+}
+.act-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Split View Container */
+.split-view {
+  display: flex;
+  flex: 1;
+}
+
+/* Left Pane (Code Editor) */
+.pane-left {
+  flex: 0 0 65%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--c-border);
+  background-color: var(--c-dark-base);
+}
+
+/* Tabs */
+.tabs-bar {
+  display: flex;
+  height: 40px;
+  background-color: var(--c-dark-base);
+  border-bottom: 1px solid var(--c-border);
+  padding: 0 8px;
+  align-items: flex-end;
+}
+.tab {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  background-color: transparent;
+  color: var(--c-text-secondary);
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-size: 13px;
+  position: relative;
+  border: 1px solid transparent;
+  border-bottom: none;
+}
+.tab:hover {
+  background-color: var(--c-surface);
+}
+.tab.active {
+  background-color: var(--c-surface);
+  color: var(--c-text-primary);
+  border-color: var(--c-border);
+}
+.tab.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--c-electric);
+  border-radius: 6px 6px 0 0;
+}
+.tab-close {
+  opacity: 0.6;
+}
+.tab:hover .tab-close {
+  opacity: 1;
+}
+
+.editor-wrap {
+  flex: 1;
+  position: relative;
+}
+
+/* Right Pane (Preview & AI) */
+.pane-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--c-surface);
+}
+
+.preview-box {
+  flex: 1;
+  border-bottom: 1px solid var(--c-border);
+  display: flex;
+  flex-direction: column;
+}
+.panel-header {
+  height: 32px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--c-border);
+}
+.preview-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: radial-gradient(#22262e 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.mock-app-window {
+  width: 250px;
+  height: 150px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: 600;
+  border: 1px solid #ccc;
+}
+.mock-btn {
+  background-color: #0066FF;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.ai-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--c-dark-base);
+}
+.ai-content {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ai-bubble {
+  background-color: var(--c-surface);
+  border: 1px solid var(--c-border);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Terminal Bottom Bar */
+.status-bar {
+  height: 28px;
+  background-color: var(--c-dark-base);
+  border-top: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 12px;
+  color: var(--c-text-secondary);
+}
+.status-bar span {
+  font-family: var(--font-code);
+}
+.status-ok {
+  color: var(--c-mint);
+}

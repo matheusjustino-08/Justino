@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Justino Brand Colors */
+  --c-dark-base: #0D0F12;      /* Volcanic Grey Background */
+  --c-surface: #16191E;        /* Surface Panels/Cards */
+  --c-electric: #0066FF;       /* Accent Electric Blue */
+  --c-electric-hover: #0052cc;
+  --c-mint: #00E699;           /* Success / Fast Build Badge */
+  
+  --c-text-primary: #F3F5F7;
+  --c-text-secondary: #8A94A6;
+  
+  --c-border: #22262e;
+  --c-border-hover: #333a45;
+  
+  /* Typography */
+  --font-ui: 'Inter', -apple-system, sans-serif;
+  --font-code: 'JetBrains Mono', 'Fira Code', monospace;
+  
+  /* Borders & Shadows */
+  --radius: 6px;
+  --shadow-glass: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--c-dark-base);
+  color: var(--c-text-primary);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* SPA Screen Container */
+.screen {
+  display: none;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease-in-out;
+}
+.screen.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Base Buttons */
+.btn {
+  background-color: var(--c-electric);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--radius);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+.btn:hover {
+  background-color: var(--c-electric-hover);
+}
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--c-border);
+  color: var(--c-text-primary);
+}
+.btn-secondary:hover {
+  background-color: var(--c-surface);
+  border-color: var(--c-border-hover);
+}
+
+/* Glass Header for Screen 1 and 2 */
+.glass-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  background-color: rgba(13, 15, 18, 0.7);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--c-border);
+  -webkit-app-region: drag;
+}
+
+/* Logo SVG Styling */
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+.brand-logo svg {
+  width: 28px;
+  height: 28px;
+}
