@@ -55,14 +55,20 @@ A biblioteca padrão nativa do Justino expõe 7 módulos principais registrados 
 
 ---
 
-## 5. IDE Nativa Oficial Self-Hosting (`justino_ide`)
+## 5. IDE Nativa Oficial PROMPT 05 DEFINITIVO (`justino_ide`)
 
-### Arquitetura Self-Hosting em `.jucode` + CSS3
-- **Lógica Escrita em Linguagem Justino**: Arquivos `.jucode` nativos (`main.jucode`, `onboarding.jucode`, `editor_core.jucode`, `file_tree.jucode`, `lsp_client.jucode`, `ai_agent.jucode`, `marketplace.jucode`).
-- **Compilável para Executável**: Gera `justino-studio.exe` via `justino build main.jucode -o justino-studio.exe`.
-- **Estilização Direta em CSS3**: Interface com temas CSS (`app.css`, `onboarding.css`, `dark_studio.css`, `cyberpunk.css`).
-- **Onboarding & OAuth2 PKCE**: Fluxo de 3 etapas com chave JWT e sincronização.
-- **Motor de IA & LSP Client**: Refatoração inline (Ctrl+K) e chat de projeto (Ctrl+L) integrados com `justino-lsp`.
+### Arquitetura Clean UI/UX nível Apple / JetBrains / Xcode em `.jucode` + CSS3
+- **Design System Clean**: Zero emojis, ícones vetoriais SVG minimalistas, grid 4px/8px e raio de bordas suaves (`6px`).
+- **7 Menus Dropdown Globais Interativos**:
+  - `File`: New File (`Ctrl+N`), Open (`Ctrl+O`), Save (`Ctrl+S`), Export Executable (`.exe`), Preferences.
+  - `Edit`: Undo (`Ctrl+Z`), Redo (`Ctrl+Y`), Duplicate Line (`Shift+Alt+Down`), Find & Replace (`Ctrl+Shift+F`), Format Document (`Shift+Alt+F`).
+  - `View`: Toggle Sidebar (`Ctrl+B`), Toggle Terminal (<code>Ctrl+`</code>), Toggle AI Panel (`Ctrl+L`), Change Theme, Live Preview UI.
+  - `AI Tools`: AI Inline Refactor (`Ctrl+K`), Explain Selection, Generate Unit Tests, AI Code Review, Select Model (Claude 3.5 Sonnet, GPT-4o, Ollama Local).
+  - `Run & Debug`: Run File (`F5`), Build Native Binary (`Ctrl+Shift+B`), Run Unit Tests.
+  - `Tools & Extensions`: Marketplace Store, Install CSS Theme, LSP Server Status.
+  - `Help`: Open Documentation, Keyboard Shortcuts, Check for Updates, About Justino Studio.
+- **Catálogos i18n**: Tradução dos menus para `pt_BR`, `en_US`, `es_ES` e `zh_CN`.
+- **Microsoft Monaco Editor Engine**: Tokenizador Monarch da sintaxe `.jucode`, minimapa, linha/coluna e visualizador ao vivo de interfaces UI + CSS com suporte RTL (`ar-SA`).
 
 ---
 
@@ -87,6 +93,6 @@ A biblioteca padrão nativa do Justino expõe 7 módulos principais registrados 
 | `justino_ui` (CSS3, Flexbox, Bidi, Native Window) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
 | `justino_stdlib` (Window, HTTP, JSON, FS, Crypto, DB, i18n) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
 | `justino_lsp` (JSON-RPC 2.0, i18n Diagnostics, AI Context) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
-| `justino_ide` (Self-Hosting .jucode IDE, CSS3, AI Agent) | ✅ Concluído | ✅ Passou (`justino build`) | 100% .jucode + Rust |
+| `justino_ide` (PROMPT 05 DEFINITIVO Clean IDE) | ✅ Concluído | ✅ Passou (`justino build`) | 100% .jucode + Rust |
 | `docs/` (ARCHITECTURE, CONVENTIONS, ROADMAP, MEMORY) | ✅ Sincronizado | ✅ Verificado | Completo |
 | `Phase 6` (Site Oficial, CI/CD GitHub Actions & Releases) | ⏳ Próxima Fase (Fase 6) | - | Pronto para receber Fase 6 |

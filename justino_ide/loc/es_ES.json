@@ -1,0 +1,11 @@
+{
+  "menu": {
+    "file": "Archivo",
+    "edit": "Editar",
+    "view": "Ver",
+    "ai_tools": "Herramientas IA",
+    "run_debug": "Ejecutar y Depurar",
+    "tools": "Herramientas y Extensiones",
+    "help": "Ayuda"
+  }
+}

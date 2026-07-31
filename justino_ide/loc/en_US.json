@@ -1,0 +1,28 @@
+{
+  "menu": {
+    "file": "File",
+    "edit": "Edit",
+    "view": "View",
+    "ai_tools": "AI Tools",
+    "run_debug": "Run & Debug",
+    "tools": "Tools & Extensions",
+    "help": "Help"
+  },
+  "file_items": {
+    "new_file": "New File (Ctrl+N)",
+    "new_project": "New Project",
+    "open": "Open File/Folder (Ctrl+O)",
+    "save": "Save (Ctrl+S)",
+    "save_all": "Save All (Ctrl+Shift+S)",
+    "export_exe": "Export Executable (.exe)",
+    "preferences": "Preferences",
+    "close_workspace": "Close Workspace"
+  },
+  "ai_items": {
+    "inline_refactor": "AI Inline Refactor (Ctrl+K)",
+    "explain": "Explain Selection",
+    "unit_tests": "Generate Unit Tests",
+    "code_review": "AI Code Review",
+    "fix_diagnostics": "Fix Diagnostics with AI"
+  }
+}

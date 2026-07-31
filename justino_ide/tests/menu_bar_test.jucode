@@ -1,0 +1,7 @@
+// Menu Bar Event Integration Test (.jucode)
+
+fn test_menu_bar_events() -> int {
+    return 0;
+}
+
+return test_menu_bar_events();

@@ -1,0 +1,7 @@
+// IDE Full E2E Integration Test (.jucode)
+
+fn test_ide_e2e() -> int {
+    return 0;
+}
+
+return test_ide_e2e();

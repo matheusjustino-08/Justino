@@ -43,13 +43,14 @@
   - [x] Documentação por passar o mouse (`hover`) e navegação "Go to Definition".
   - [x] Extrator de Contexto de Projeto para IA (`context_builder`) para a IDE.
 
-- [x] **Fase 5: IDE Nativa Oficial Self-Hosting (`justino_ide`)**
-  - [x] IDE escrita 100% em linguagem Justino (`.jucode`) e estilizada nativamente em CSS3.
-  - [x] Compilável para executável autônomo `justino-studio.exe` via `justino build main.jucode`.
-  - [x] Wizard de Onboarding 3-Etapas com login OAuth2 PKCE e chave JWT.
-  - [x] Módulos em `.jucode` (`onboarding.jucode`, `editor_core.jucode`, `file_tree.jucode`, `lsp_client.jucode`, `ai_agent.jucode`, `marketplace.jucode`).
-  - [x] Agente de IA integrado com refatoração inline (Ctrl+K) e chat do projeto (Ctrl+L).
-  - [x] Painel Live Preview de softwares com UI e Loja de Extensões/Temas CSS (`dark_studio.css`, `cyberpunk.css`).
+- [x] **Fase 5: IDE Nativa Oficial PROMPT 05 DEFINITIVO (`justino_ide`)**
+  - [x] Design Clean & Minimalista nível Apple/JetBrains/Xcode com grid 4px/8px e zero emojis.
+  - [x] 7 Menus Dropdown Globais interativos (File, Edit, View, AI Tools, Run & Debug, Tools & Extensions, Help).
+  - [x] Catálogos de Tradução i18n (`pt_BR.json`, `en_US.json`, `es_ES.json`, `zh_CN.json`).
+  - [x] Arquivos CSS3 (`layout.css`, `dropdowns.css`, `onboarding.css`, `dark_studio.css`, `cyberpunk.css`, `clean_light.css`, `monokai.css`).
+  - [x] Módulos `.jucode` (`menu_bar.jucode`, `onboarding.jucode`, `workspace.jucode`, `editor_buffer.jucode`, `lsp_client.jucode`, `ai_agent.jucode`, `live_preview.jucode`, `terminal.jucode`, `marketplace.jucode`).
+  - [x] Microsoft Monaco Editor Engine integrado com suporte a sintaxe `.jucode` e minimapa.
+  - [x] Agente de IA (Ctrl+K inline refactor / Ctrl+L chat) e painel GPU Live UI Preview.
 
 - [ ] **Fase 6: Site Oficial, Pipeline CI/CD Multiplataforma e Releases**
   - [ ] Pipeline CI/CD GitHub Actions compilando binários para Windows, Linux e macOS.

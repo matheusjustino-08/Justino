@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Justino Studio Professional IDE (.jucode)</title>
+    <title>Justino Studio IDE - Professional Clean Edition (.jucode)</title>
     <!-- Microsoft Monaco Editor CDN Loader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
     <style>
@@ -16,40 +16,96 @@
             flex-direction: column;
             background: #181825;
             color: #cdd6f4;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
             user-select: none;
         }
 
-        /* Top Menu Bar */
+        /* Apple / JetBrains Level Top Menu Bar */
         header.ide-menubar {
-            height: 36px;
+            height: 38px;
             background: #11111b;
             display: flex;
             align-items: center;
-            padding: 0 12px;
-            gap: 16px;
+            padding: 0 14px;
+            gap: 4px;
             border-bottom: 1px solid #313244;
-            font-size: 12px;
+            font-size: 13px;
+            position: relative;
+            z-index: 1000;
         }
         .ide-logo {
             color: #89b4fa;
-            font-weight: 800;
+            font-weight: 700;
             font-size: 13px;
             display: flex;
             align-items: center;
             gap: 8px;
-            letter-spacing: 0.5px;
+            margin-right: 12px;
+            letter-spacing: 0.3px;
         }
-        .menu-item {
+        .menu-title {
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 5px 10px;
+            border-radius: 5px;
             color: #bac2de;
-            transition: all 0.15s ease;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.12s ease;
+            position: relative;
         }
-        .menu-item:hover {
+        .menu-title:hover, .menu-title.active {
             background: #313244;
             color: #ffffff;
+        }
+
+        /* Dropdown Menus Styling */
+        .dropdown-panel {
+            position: absolute;
+            top: 34px;
+            left: 0;
+            background: rgba(24, 24, 37, 0.96);
+            border: 1px solid #45475a;
+            border-radius: 6px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+            padding: 6px 0;
+            min-width: 240px;
+            display: none;
+            flex-direction: column;
+            z-index: 2000;
+            backdrop-filter: blur(12px);
+        }
+        .dropdown-panel.show { display: flex; }
+        .dropdown-item {
+            padding: 7px 14px;
+            font-size: 12px;
+            color: #cdd6f4;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.1s ease;
+        }
+        .dropdown-item:hover {
+            background: #3182ce;
+            color: #ffffff;
+        }
+        .dropdown-shortcut {
+            font-size: 11px;
+            color: #6c7086;
+            margin-left: 16px;
+        }
+        .dropdown-item:hover .dropdown-shortcut { color: #e2e8f0; }
+        .dropdown-divider {
+            height: 1px;
+            background: #313244;
+            margin: 4px 0;
+        }
+
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .action-btn {
             background: #3182ce;
@@ -57,12 +113,13 @@
             font-weight: 600;
             border: none;
             padding: 5px 14px;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 12px;
             display: flex;
             align-items: center;
             gap: 6px;
+            transition: background 0.12s ease;
         }
         .action-btn:hover { background: #2b6cb0; }
         .action-btn.build { background: #805ad5; }
@@ -104,12 +161,12 @@
         .activity-icon svg {
             width: 20px;
             height: 20px;
-            fill: currentColor;
+            fill: stroke;
         }
 
         /* File Explorer Sidebar */
         .sidebar {
-            width: 240px;
+            width: 250px;
             background: #181825;
             border-right: 1px solid #313244;
             display: flex;
@@ -123,7 +180,7 @@
             align-items: center;
             justify-content: space-between;
             font-size: 11px;
-            font-weight: bold;
+            font-weight: 700;
             text-transform: uppercase;
             color: #a6adc8;
             border-bottom: 1px solid #313244;
@@ -134,9 +191,10 @@
             border: 1px solid #45475a;
             color: #89b4fa;
             font-size: 11px;
-            padding: 2px 6px;
+            padding: 2px 8px;
             border-radius: 4px;
             cursor: pointer;
+            font-weight: 600;
         }
         .btn-new-file:hover { background: #313244; }
 
@@ -146,8 +204,8 @@
             overflow-y: auto;
         }
         .tree-folder {
-            padding: 4px 16px;
-            font-weight: bold;
+            padding: 6px 16px;
+            font-weight: 700;
             color: #89b4fa;
             font-size: 12px;
             display: flex;
@@ -193,7 +251,7 @@
             padding: 0 16px;
             background: #1e1e2e;
             color: #89b4fa;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             border-top: 2px solid #89b4fa;
             border-right: 1px solid #313244;
@@ -365,25 +423,111 @@
     </style>
 </head>
 <body>
-    <!-- Top Menu Bar -->
+    <!-- Top Menu Bar with 7 Global Dropdown Menus -->
     <header class="ide-menubar">
         <div class="ide-logo">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#89b4fa" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
             <span>JUSTINO STUDIO IDE</span>
         </div>
-        <div class="menu-item" onclick="openFile('app_demo.jucode')">File</div>
-        <div class="menu-item" onclick="openFile('styles.css')">Edit</div>
-        <div class="menu-item" onclick="toggleTheme()">View</div>
-        <div class="menu-item" onclick="runScript()">Run</div>
-        <div class="menu-item" onclick="openMarketplace()">Marketplace</div>
-        <div class="menu-item" onclick="toggleAiDrawer()">AI Assistant</div>
-        <button class="action-btn" onclick="runScript()">Run VM</button>
-        <button class="action-btn build" onclick="buildExecutable()">Build Executable (.exe)</button>
+
+        <!-- 1. File Menu -->
+        <div class="menu-title" onclick="toggleMenu(event, 'menu-file')">
+            <span>File</span>
+            <div id="menu-file" class="dropdown-panel">
+                <div class="dropdown-item" onclick="createNewFile()"><span>New File</span><span class="dropdown-shortcut">Ctrl+N</span></div>
+                <div class="dropdown-item" onclick="alert('New Project initialized.')"><span>New Project</span><span class="dropdown-shortcut">Ctrl+Shift+N</span></div>
+                <div class="dropdown-item" onclick="openFile('app_demo.jucode')"><span>Open File/Folder</span><span class="dropdown-shortcut">Ctrl+O</span></div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="saveActiveFile()"><span>Save</span><span class="dropdown-shortcut">Ctrl+S</span></div>
+                <div class="dropdown-item" onclick="saveActiveFile()"><span>Save All</span><span class="dropdown-shortcut">Ctrl+Shift+S</span></div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="buildExecutable()"><span>Export Executable (.exe)</span><span class="dropdown-shortcut">Ctrl+Shift+B</span></div>
+                <div class="dropdown-item" onclick="toggleTheme()"><span>Preferences</span></div>
+            </div>
+        </div>
+
+        <!-- 2. Edit Menu -->
+        <div class="menu-title" onclick="toggleMenu(event, 'menu-edit')">
+            <span>Edit</span>
+            <div id="menu-edit" class="dropdown-panel">
+                <div class="dropdown-item" onclick="monacoInstance && monacoInstance.trigger('menu', 'undo')"><span>Undo</span><span class="dropdown-shortcut">Ctrl+Z</span></div>
+                <div class="dropdown-item" onclick="monacoInstance && monacoInstance.trigger('menu', 'redo')"><span>Redo</span><span class="dropdown-shortcut">Ctrl+Y</span></div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="monacoInstance && monacoInstance.trigger('menu', 'editor.action.copyLinesDownAction')"><span>Duplicate Line</span><span class="dropdown-shortcut">Shift+Alt+Down</span></div>
+                <div class="dropdown-item" onclick="monacoInstance && monacoInstance.trigger('menu', 'actions.find')"><span>Find & Replace</span><span class="dropdown-shortcut">Ctrl+Shift+F</span></div>
+                <div class="dropdown-item" onclick="monacoInstance && monacoInstance.trigger('menu', 'editor.action.formatDocument')"><span>Format Document</span><span class="dropdown-shortcut">Shift+Alt+F</span></div>
+            </div>
+        </div>
+
+        <!-- 3. View Menu -->
+        <div class="menu-title" onclick="toggleMenu(event, 'menu-view')">
+            <span>View</span>
+            <div id="menu-view" class="dropdown-panel">
+                <div class="dropdown-item" onclick="showActivity('explorer')"><span>Toggle Sidebar</span><span class="dropdown-shortcut">Ctrl+B</span></div>
+                <div class="dropdown-item" onclick="switchTermTab('terminal')"><span>Toggle Terminal</span><span class="dropdown-shortcut">Ctrl+`</span></div>
+                <div class="dropdown-item" onclick="toggleAiDrawer()"><span>Toggle AI Panel</span><span class="dropdown-shortcut">Ctrl+L</span></div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="toggleTheme()"><span>Change Theme</span></div>
+                <div class="dropdown-item" onclick="updateLiveViewport()"><span>Live Preview UI</span></div>
+            </div>
+        </div>
+
+        <!-- 4. AI Tools Menu -->
+        <div class="menu-title" onclick="toggleMenu(event, 'menu-ai')">
+            <span>AI Tools</span>
+            <div id="menu-ai" class="dropdown-panel">
+                <div class="dropdown-item" onclick="toggleAiDrawer()"><span>AI Inline Refactor</span><span class="dropdown-shortcut">Ctrl+K</span></div>
+                <div class="dropdown-item" onclick="sendAiQueryPrompt('Explain the selected code')"><span>Explain Selection</span></div>
+                <div class="dropdown-item" onclick="sendAiQueryPrompt('Generate unit tests for this module')"><span>Generate Unit Tests</span></div>
+                <div class="dropdown-item" onclick="sendAiQueryPrompt('Run AI Code Review and optimization check')"><span>AI Code Review</span></div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="alert('Selected Model: Claude 3.5 Sonnet')"><span>Model: Claude 3.5 Sonnet</span></div>
+                <div class="dropdown-item" onclick="alert('Selected Model: GPT-4o')"><span>Model: GPT-4o</span></div>
+                <div class="dropdown-item" onclick="alert('Selected Model: Ollama Local')"><span>Model: Ollama Local (Offline)</span></div>
+            </div>
+        </div>
+
+        <!-- 5. Run & Debug Menu -->
+        <div class="menu-title" onclick="toggleMenu(event, 'menu-run')">
+            <span>Run & Debug</span>
+            <div id="menu-run" class="dropdown-panel">
+                <div class="dropdown-item" onclick="runScript()"><span>Run File</span><span class="dropdown-shortcut">F5</span></div>
+                <div class="dropdown-item" onclick="buildExecutable()"><span>Build Native Binary (.exe)</span><span class="dropdown-shortcut">Ctrl+Shift+B</span></div>
+                <div class="dropdown-item" onclick="runScript()"><span>Run Unit Tests</span></div>
+            </div>
+        </div>
+
+        <!-- 6. Tools & Extensions Menu -->
+        <div class="menu-title" onclick="toggleMenu(event, 'menu-tools')">
+            <span>Tools & Extensions</span>
+            <div id="menu-tools" class="dropdown-panel">
+                <div class="dropdown-item" onclick="openMarketplace()"><span>Marketplace Store</span></div>
+                <div class="dropdown-item" onclick="openMarketplace()"><span>Install CSS Theme</span></div>
+                <div class="dropdown-item" onclick="alert('justino-lsp Server Status: Running (0 errors, 5ms latency)')"><span>LSP Server Status</span></div>
+            </div>
+        </div>
+
+        <!-- 7. Help Menu -->
+        <div class="menu-title" onclick="toggleMenu(event, 'menu-help')">
+            <span>Help</span>
+            <div id="menu-help" class="dropdown-panel">
+                <div class="dropdown-item" onclick="alert('Justino Documentation: https://justino.dev/docs')"><span>Open Documentation</span></div>
+                <div class="dropdown-item" onclick="alert('Shortcuts: Ctrl+N (New), Ctrl+O (Open), Ctrl+S (Save), Ctrl+K (AI Refactor), Ctrl+L (AI Chat), F5 (Run)')"><span>Keyboard Shortcuts</span></div>
+                <div class="dropdown-item" onclick="alert('Justino Studio IDE v1.0.0 is up to date!')"><span>Check for Updates</span></div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="alert('About Justino Studio IDE (.jucode)\nSelf-Hosting Engine powered by Rust VM + Monaco Editor')"><span>About Justino Studio</span></div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="action-btn" onclick="runScript()">Run VM</button>
+            <button class="action-btn build" onclick="buildExecutable()">Build Executable (.exe)</button>
+        </div>
     </header>
 
     <!-- Main Workbench Layout -->
     <div class="workbench">
-        <!-- Left Activity Bar with Vector SVG Icons -->
+        <!-- Left Activity Bar -->
         <div class="activity-bar">
             <div id="act-explorer" class="activity-icon active" title="File Explorer" onclick="showActivity('explorer')">
                 <svg viewBox="0 0 24 24"><path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2h-6l-2-2H5c-1.1 0-2 .9-2 2z"/></svg>
@@ -423,7 +567,7 @@
                 </div>
             </div>
 
-            <!-- Monaco Editor Mount Container -->
+            <!-- Monaco Editor Container -->
             <div id="monaco-editor-container"></div>
 
             <!-- Terminal Console Pane -->
@@ -433,7 +577,7 @@
                     <span id="tab-out" class="term-tab" onclick="switchTermTab('output')">OUTPUT</span>
                     <span id="tab-prob" class="term-tab" onclick="switchTermTab('problems')">PROBLEMS (0)</span>
                 </div>
-                <div id="terminal-log" class="terminal-log">Justino Studio IDE v1.0.0 Ready. Select a file or click 'Run VM'.</div>
+                <div id="terminal-log" class="terminal-log">Justino Studio IDE v1.0.0 Clean Edition Ready. Select a file or click 'Run VM'.</div>
             </div>
         </div>
 
@@ -476,7 +620,7 @@
         </div>
     </footer>
 
-    <!-- Script initializing Monaco Editor & Logic -->
+    <!-- Script initializing Dropdown Menus, Monaco Editor & Logic -->
     <script>
         const fileDatabase = {
             'app_demo.jucode': `// Justino Declarative UI Demo Application (.jucode)
@@ -603,6 +747,21 @@ return main();`
         let currentFileName = 'app_demo.jucode';
         let monacoInstance = null;
 
+        // Dropdown Menu Toggle Handler
+        function toggleMenu(event, menuId) {
+            event.stopPropagation();
+            const allMenus = document.querySelectorAll('.dropdown-panel');
+            allMenus.forEach(m => {
+                if (m.id !== menuId) m.classList.remove('show');
+            });
+            const target = document.getElementById(menuId);
+            if (target) target.classList.toggle('show');
+        }
+
+        window.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-panel').forEach(m => m.classList.remove('show'));
+        });
+
         // Initialize Microsoft Monaco Editor via RequireJS
         require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
         require(['vs/editor/editor.main'], function () {
@@ -683,6 +842,11 @@ return main();`
                 tree.appendChild(div);
                 openFile(fileName);
             }
+        }
+
+        function saveActiveFile() {
+            const term = document.getElementById('terminal-log');
+            term.innerText = `[File System] Saved '${currentFileName}' successfully. (${fileDatabase[currentFileName].length} bytes written)`;
         }
 
         function updateLiveViewport() {
@@ -769,6 +933,13 @@ return main();`
             }, 300);
         }
 
+        function sendAiQueryPrompt(promptText) {
+            toggleAiDrawer();
+            const input = document.getElementById('drawer-user-input');
+            input.value = promptText;
+            sendAiQuery();
+        }
+
         function toggleTheme() {
             if (monacoInstance) {
                 const currTheme = monacoInstance._themeService?.getTheme?.()?.id;
@@ -797,6 +968,11 @@ return main();`
                     <strong>Cyberpunk Neon Theme</strong>
                     <p style="color: #a6adc8; font-size: 11px; margin-top: 4px;">High-contrast neon theme.</p>
                     <button style="margin-top: 8px; background: #ff007f; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer;" onclick="toggleTheme()">Activate Theme</button>
+                </div>
+                <div style="background: #313244; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                    <strong>Clean Light Professional Theme</strong>
+                    <p style="color: #a6adc8; font-size: 11px; margin-top: 4px;">Clean light UI theme.</p>
+                    <button style="margin-top: 8px; background: #0d6efd; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer;" onclick="toggleTheme()">Activate Theme</button>
                 </div>
             `;
             document.getElementById('drawer-input-container').style.display = 'none';

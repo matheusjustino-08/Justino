@@ -13,24 +13,15 @@ struct IdeState {
     is_authenticated: bool
 }
 
-fn criar_janela_ide(cfg: WindowConfig) -> IdeState {
-    return IdeState {
-        active_locale: "pt_BR",
-        active_theme: cfg.stylesheet,
-        is_authenticated: true
-    };
-}
-
 fn main() -> int {
     let cfg = WindowConfig {
-        title: "Justino Studio IDE (.jucode)",
-        width: 1280,
-        height: 800,
-        stylesheet: "./styles/app.css"
+        title: "Justino Studio IDE",
+        width: 1440,
+        height: 900,
+        stylesheet: "./styles/layout.css"
     };
 
-    let ide = criar_janela_ide(cfg);
-    return ide.height;
+    return cfg.width;
 }
 
 return main();

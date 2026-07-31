@@ -1,0 +1,51 @@
+// Global Dropdown Menus Manager in Justino (.jucode)
+
+struct MenuItemAction {
+    menu_id: string,
+    action_name: string,
+    shortcut: string
+}
+
+struct MenuBarState {
+    active_menu: string,
+    items_count: int
+}
+
+fn handle_file_new() -> MenuItemAction {
+    return MenuItemAction {
+        menu_id: "file",
+        action_name: "new_file",
+        shortcut: "Ctrl+N"
+    };
+}
+
+fn handle_file_save() -> MenuItemAction {
+    return MenuItemAction {
+        menu_id: "file",
+        action_name: "save",
+        shortcut: "Ctrl+S"
+    };
+}
+
+fn handle_ai_refactor() -> MenuItemAction {
+    return MenuItemAction {
+        menu_id: "ai_tools",
+        action_name: "inline_refactor",
+        shortcut: "Ctrl+K"
+    };
+}
+
+fn handle_run_build() -> MenuItemAction {
+    return MenuItemAction {
+        menu_id: "run_debug",
+        action_name: "build_native",
+        shortcut: "Ctrl+Shift+B"
+    };
+}
+
+fn initialize(window_ref: int) -> MenuBarState {
+    return MenuBarState {
+        active_menu: "none",
+        items_count: 7
+    };
+}

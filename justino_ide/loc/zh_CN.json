@@ -1,0 +1,11 @@
+{
+  "menu": {
+    "file": "文件",
+    "edit": "编辑",
+    "view": "视图",
+    "ai_tools": "AI 工具",
+    "run_debug": "运行与调试",
+    "tools": "工具与扩展",
+    "help": "帮助"
+  }
+}

@@ -1,0 +1,13 @@
+// Live UI & CSS Preview Visualizer in Justino (.jucode)
+
+struct PreviewState {
+    is_connected: bool,
+    active_bidi_dir: string
+}
+
+fn initialize(window_ref: int) -> PreviewState {
+    return PreviewState {
+        is_connected: true,
+        active_bidi_dir: "ltr"
+    };
+}

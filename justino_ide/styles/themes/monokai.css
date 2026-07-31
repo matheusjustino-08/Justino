@@ -1,0 +1,15 @@
+/* Monokai Pro Official Theme (monokai.css) */
+window {
+    background-color: #2d2a2e;
+    color: #fcfcfa;
+}
+
+.ide-menubar {
+    background-color: #221f22;
+    border-bottom: 1px solid #403e41;
+}
+
+button {
+    background-color: #ffd866;
+    color: #2d2a2e;
+}
