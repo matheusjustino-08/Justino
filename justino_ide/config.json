@@ -1,9 +1,0 @@
-{
-  "app_name": "Justino Studio IDE",
-  "version": "1.0.0",
-  "locale": "pt_BR",
-  "theme_path": "./styles/themes/dark_studio.css",
-  "ai_model": "Claude 3.5 Sonnet",
-  "auto_save": true,
-  "font_size": 14
-}

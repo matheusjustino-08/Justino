@@ -1,7 +1,0 @@
-// Editor Buffer & Shortcuts Integration Test (.jucode)
-
-fn test_editor_buffer() -> int {
-    return 0;
-}
-
-return test_editor_buffer();
