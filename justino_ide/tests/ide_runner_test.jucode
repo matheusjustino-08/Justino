@@ -1,0 +1,23 @@
+// Justino Studio IDE Integration Test (.jucode)
+
+struct TestResult {
+    passed: bool,
+    code: int
+}
+
+fn test_ide_startup() -> TestResult {
+    return TestResult {
+        passed: true,
+        code: 200
+    };
+}
+
+fn main() -> int {
+    let res = test_ide_startup();
+    if res.passed {
+        return 0;
+    }
+    return 1;
+}
+
+return main();

@@ -1,0 +1,14 @@
+/* Cyberpunk Neon Official Theme (cyberpunk.css) */
+window {
+    background-color: #0d0221;
+    color: #00f0ff;
+}
+
+.title-app {
+    color: #ff007f;
+}
+
+button {
+    background-color: #ff007f;
+    color: #ffe600;
+}

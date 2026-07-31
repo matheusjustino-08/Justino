@@ -1,0 +1,7 @@
+{
+  "app_name": "Justino Studio IDE",
+  "version": "1.0.0",
+  "active_locale": "pt_BR",
+  "active_theme": "./styles/themes/dark_studio.css",
+  "ai_provider": "Claude"
+}

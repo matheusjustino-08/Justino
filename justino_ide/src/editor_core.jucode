@@ -1,0 +1,19 @@
+// Editor Core Buffer Manager in Justino (.jucode)
+
+struct EditorTab {
+    file_path: string,
+    content: string,
+    is_dirty: bool
+}
+
+fn abrir_arquivo(path: string) -> EditorTab {
+    return EditorTab {
+        file_path: path,
+        content: "// Justino Source Code (.jucode)\nfn main() -> int { return 0; }\n",
+        is_dirty: false
+    };
+}
+
+fn carregar_workspace(file_name: string) -> EditorTab {
+    return abrir_arquivo(file_name);
+}

@@ -1,0 +1,14 @@
+// AI Agent Engine (Ctrl+K / Ctrl+L) in Justino (.jucode)
+
+struct AiResponse {
+    provider: string,
+    output_code: string
+}
+
+fn refatorar_inline(provider_name: string, selection: string) -> AiResponse {
+    let result_code = "// Refactored by ${provider_name}\n${selection}";
+    return AiResponse {
+        provider: provider_name,
+        output_code: result_code
+    };
+}

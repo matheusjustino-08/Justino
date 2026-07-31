@@ -1,0 +1,13 @@
+// File Tree Directory Navigator in Justino (.jucode)
+
+struct FileNode {
+    name: string,
+    is_dir: bool
+}
+
+fn listar_diretorio(dir_path: string) -> FileNode {
+    return FileNode {
+        name: dir_path,
+        is_dir: true
+    };
+}

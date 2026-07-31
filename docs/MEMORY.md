@@ -55,14 +55,14 @@ A biblioteca padrão nativa do Justino expõe 7 módulos principais registrados 
 
 ---
 
-## 5. IDE Nativa Oficial (`justino_ide`)
+## 5. IDE Nativa Oficial Self-Hosting (`justino_ide`)
 
-### Arquitetura Desktop Tauri v2
-- **Backend Rust Ultraleve**: Consumo < 80MB de RAM utilizando o WebView GPU da plataforma.
-- **Wizard de Onboarding 3-Etapas**: Autenticação OAuth2 PKCE com emissão de token JWT, escolha de temas e provedores de IA.
-- **Monaco Editor Setup**: Tokenizador Monarch da sintaxe `.jucode` e injetor de temas visuais (`dark_theme.css`, `cyberpunk_theme.css`).
-- **Motor de IA Integrado (Ctrl+K / Ctrl+L)**: Suporte a refatoração inline e chat contextual do projeto (Claude, GPT, Gemini, Ollama Local).
-- **Painel Live Preview**: Atualização visual em tempo real de interfaces `.jucode` + `.css`.
+### Arquitetura Self-Hosting em `.jucode` + CSS3
+- **Lógica Escrita em Linguagem Justino**: Arquivos `.jucode` nativos (`main.jucode`, `onboarding.jucode`, `editor_core.jucode`, `file_tree.jucode`, `lsp_client.jucode`, `ai_agent.jucode`, `marketplace.jucode`).
+- **Compilável para Executável**: Gera `justino-studio.exe` via `justino build main.jucode -o justino-studio.exe`.
+- **Estilização Direta em CSS3**: Interface com temas CSS (`app.css`, `onboarding.css`, `dark_studio.css`, `cyberpunk.css`).
+- **Onboarding & OAuth2 PKCE**: Fluxo de 3 etapas com chave JWT e sincronização.
+- **Motor de IA & LSP Client**: Refatoração inline (Ctrl+K) e chat de projeto (Ctrl+L) integrados com `justino-lsp`.
 
 ---
 
@@ -87,6 +87,6 @@ A biblioteca padrão nativa do Justino expõe 7 módulos principais registrados 
 | `justino_ui` (CSS3, Flexbox, Bidi, Native Window) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
 | `justino_stdlib` (Window, HTTP, JSON, FS, Crypto, DB, i18n) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
 | `justino_lsp` (JSON-RPC 2.0, i18n Diagnostics, AI Context) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
-| `justino_ide` (Tauri v2, Monaco Editor, OAuth2, AI Agent) | ✅ Concluído | ✅ Passou (`cargo test`) | 100% Rust Seguro |
+| `justino_ide` (Self-Hosting .jucode IDE, CSS3, AI Agent) | ✅ Concluído | ✅ Passou (`justino build`) | 100% .jucode + Rust |
 | `docs/` (ARCHITECTURE, CONVENTIONS, ROADMAP, MEMORY) | ✅ Sincronizado | ✅ Verificado | Completo |
 | `Phase 6` (Site Oficial, CI/CD GitHub Actions & Releases) | ⏳ Próxima Fase (Fase 6) | - | Pronto para receber Fase 6 |

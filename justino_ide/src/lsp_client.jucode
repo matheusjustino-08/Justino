@@ -1,0 +1,13 @@
+// LSP Client Bridge in Justino (.jucode)
+
+struct LspRequestMsg {
+    id: int,
+    method: string
+}
+
+fn solicitar_autocompletar(method_name: string) -> LspRequestMsg {
+    return LspRequestMsg {
+        id: 1,
+        method: method_name
+    };
+}

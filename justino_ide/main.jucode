@@ -1,0 +1,36 @@
+// Justino Studio Official IDE Main Entry Point (.jucode)
+
+struct WindowConfig {
+    title: string,
+    width: int,
+    height: int,
+    stylesheet: string
+}
+
+struct IdeState {
+    active_locale: string,
+    active_theme: string,
+    is_authenticated: bool
+}
+
+fn criar_janela_ide(cfg: WindowConfig) -> IdeState {
+    return IdeState {
+        active_locale: "pt_BR",
+        active_theme: cfg.stylesheet,
+        is_authenticated: true
+    };
+}
+
+fn main() -> int {
+    let cfg = WindowConfig {
+        title: "Justino Studio IDE (.jucode)",
+        width: 1280,
+        height: 800,
+        stylesheet: "./styles/app.css"
+    };
+
+    let ide = criar_janela_ide(cfg);
+    return ide.height;
+}
+
+return main();
